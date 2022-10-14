@@ -1,0 +1,21 @@
+{
+  "name": "filtradocolaborativo",
+  "version": "1.0.0",
+  "description": "Programa de filtrado colaborativo para la asignatura de GCO",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.8.5",
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "eslint": "^8.25.0",
+    "eslint-config-google": "^0.14.0"
+  }
+}
