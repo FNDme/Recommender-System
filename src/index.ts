@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+
 function solve(matriz: Array<Array<number | null>>, neighbours: number):
     Array<Array<number | null>> {
   const result: Array<Array<number | null>> = matriz;
@@ -61,7 +63,7 @@ function calculatePearson(matriz: Array<Array<number | null>>,
   return correlationMatrix;
 }
 
-function avgRow(row : Array<number | null>): number {
+function avgRow(row: Array<number | null>): number {
   let sum: number = 0;
   let nullCount: number = 0;
 
@@ -75,8 +77,8 @@ function avgRow(row : Array<number | null>): number {
   return sum / (row.length - nullCount);
 }
 
-function neighValue(values : Array<number | null>,
-    neigh : number): [number, number][] {
+function neighValue(values: Array<number | null>,
+    neigh: number): [number, number][] {
   const result: [number, number][] = []; // [value, index]
   for (let i = 0; i < values.length; i++) {
     if (typeof values[i] === 'number' && result.length < neigh) {
@@ -93,17 +95,50 @@ function neighValue(values : Array<number | null>,
   return result;
 }
 
-const matriz: Array<Array<number | null>> =
-  [[4, null, null, 0, 2, null, 3, null, 0, null],
-    [null, 4, 4, 1, 1, 3, 0, null, null, 2],
-    [2, 5, 1, 2, 1, 5, 5, 5, 2, 0],
-    [1, 4, 1, 3, 1, null, 1, 0, 0, 0],
-    [0, 3, 4, 0, 0, 5, 5, 4, 5, null]];
+function readMatrix(file: string): Array<Array<number | null>> {
+  const lines: string[] = fs.readFileSync(file).toString().split('\r');
+  const result: Array<Array<number | null>> = [];
+  for (let i = 0; i < lines.length; i++) {
+    lines[i] = lines[i].trim();
+    if (lines[i] !== '') {
+      result.push(lines[i].split(' ').map((value: string) => {
+        if (value === '-') {
+          return null;
+        } else {
+          return Number(value);
+        }
+      }));
+    }
+  }
+  return result;
+}
+
+const input: string = process.argv[2];
+const matriz = readMatrix(input);
+
+console.log('Original matrix');
+for (let i = 0; i < matriz.length; i++) {
+  for (let j = 0; j < matriz[i].length; j++) {
+    if (typeof matriz[i][j] === 'number') {
+      process.stdout.write(matriz[i][j]?.toFixed(2) + ' ');
+    } else {
+      process.stdout.write('---- ');
+    }
+  }
+  process.stdout.write('\n');
+}
 
 const solution = solve(matriz, 3);
+
+console.log('\nSolution matrix');
 for (let i = 0; i < solution.length; i++) {
   for (let j = 0; j < solution[i].length; j++) {
-    process.stdout.write(solution[i][j]?.toFixed(2) + ' ');
+    if (solution[i][j] as number % 1 === 0) {
+      process.stdout.write(solution[i][j]?.toFixed() + '.-- ');
+    } else {
+      process.stdout.write('\x1b[34m' + solution[i][j]?.toFixed(2) +
+          '\x1b[0m ');
+    }
   }
   process.stdout.write('\n');
 }

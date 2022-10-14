@@ -1,4 +1,29 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = __importStar(require("fs"));
 function solve(matriz, neighbours) {
     const result = matriz;
     for (let i = 0; i < matriz.length; i++) {
@@ -85,15 +110,48 @@ function neighValue(values, neigh) {
     }
     return result;
 }
-const matriz = [[4, null, null, 0, 2, null, 3, null, 0, null],
-    [null, 4, 4, 1, 1, 3, 0, null, null, 2],
-    [2, 5, 1, 2, 1, 5, 5, 5, 2, 0],
-    [1, 4, 1, 3, 1, null, 1, 0, 0, 0],
-    [0, 3, 4, 0, 0, 5, 5, 4, 5, null]];
+function readMatrix(file) {
+    const lines = fs.readFileSync(file).toString().split('\r');
+    const result = [];
+    for (let i = 0; i < lines.length; i++) {
+        lines[i] = lines[i].trim();
+        if (lines[i] !== '') {
+            result.push(lines[i].split(' ').map((value) => {
+                if (value === '-') {
+                    return null;
+                }
+                else {
+                    return Number(value);
+                }
+            }));
+        }
+    }
+    return result;
+}
+const input = process.argv[2];
+const matriz = readMatrix(input);
+console.log('Original matrix');
+for (let i = 0; i < matriz.length; i++) {
+    for (let j = 0; j < matriz[i].length; j++) {
+        if (typeof matriz[i][j] === 'number') {
+            process.stdout.write(matriz[i][j]?.toFixed(2) + ' ');
+        }
+        else {
+            process.stdout.write('---- ');
+        }
+    }
+    process.stdout.write('\n');
+}
 const solution = solve(matriz, 3);
+console.log('\nSolution matrix');
 for (let i = 0; i < solution.length; i++) {
     for (let j = 0; j < solution[i].length; j++) {
-        process.stdout.write(solution[i][j]?.toFixed(2) + ' ');
+        if (solution[i][j] % 1 === 0) {
+            process.stdout.write(solution[i][j]?.toFixed() + '.-- ');
+        }
+        else {
+            process.stdout.write('\x1b[34m' + solution[i][j]?.toFixed(2) + '\x1b[0m ');
+        }
     }
     process.stdout.write('\n');
 }
