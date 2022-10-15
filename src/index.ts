@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 
-function solve(matriz: Array<Array<number | null>>, neighbours: number):
+export function solve(matriz: Array<Array<number | null>>, neighbours: number):
     Array<Array<number | null>> {
   const result: Array<Array<number | null>> = matriz;
   for (let i = 0; i < matriz.length; i++) {
@@ -13,7 +13,7 @@ function solve(matriz: Array<Array<number | null>>, neighbours: number):
   return result;
 }
 
-function solveByPearson(matriz: Array<Array<number | null>>,
+export function solveByPearson(matriz: Array<Array<number | null>>,
     i: number, j: number, numberOfNeighbours: number): number {
   const correlationMatrix: Array<number | null> =
     calculatePearson(matriz, i, j);
@@ -33,29 +33,27 @@ function solveByPearson(matriz: Array<Array<number | null>>,
   return avgI + (numerator / denominator);
 }
 
-function calculatePearson(matriz: Array<Array<number | null>>,
+export function calculatePearson(matriz: Array<Array<number | null>>,
     i: number, j: number): Array<number | null> {
   const correlationMatrix: Array<number | null> = [];
   const avgI: number = avgRow(matriz[i]);
   for (let k = 0; k < matriz.length; k++) {
     if (k !== i) {
       const avgK: number = avgRow(matriz[k]);
-      let correlation: number = 0;
       let numerator: number = 0;
-      let denominator: number = 0;
+      let denominatorFirst: number = 0;
+      let denominatorSecond: number = 0;
       for (let l = 0; l < matriz[k].length; l++) {
         if (typeof matriz[k][l] === 'number' &&
             typeof matriz[i][l] === 'number') {
           numerator +=
-            (matriz[k][l] as number - avgK) *
-            (matriz[i][l] as number - avgI);
-          denominator +=
-            Math.sqrt(Math.pow((matriz[k][l] as number - avgK), 2)) *
-            Math.sqrt(Math.pow((matriz[i][l] as number - avgI), 2));
+            (matriz[k][l] as number - avgK) * (matriz[i][l] as number - avgI);
+          denominatorFirst += Math.pow((matriz[k][l] as number - avgK), 2);
+          denominatorSecond += Math.pow((matriz[i][l] as number - avgI), 2);
         }
       }
-      correlation = numerator / denominator;
-      correlationMatrix.push(correlation);
+      correlationMatrix.push(numerator /
+      (Math.sqrt(denominatorFirst) * Math.sqrt(denominatorSecond)));
     } else {
       correlationMatrix.push(null);
     }
@@ -63,7 +61,7 @@ function calculatePearson(matriz: Array<Array<number | null>>,
   return correlationMatrix;
 }
 
-function avgRow(row: Array<number | null>): number {
+export function avgRow(row: Array<number | null>): number {
   let sum: number = 0;
   let nullCount: number = 0;
 
@@ -77,68 +75,38 @@ function avgRow(row: Array<number | null>): number {
   return sum / (row.length - nullCount);
 }
 
-function neighValue(values: Array<number | null>,
+export function neighValue(values: Array<number | null>,
     neigh: number): [number, number][] {
   const result: [number, number][] = []; // [value, index]
-  for (let i = 0; i < values.length; i++) {
-    if (typeof values[i] === 'number' && result.length < neigh) {
-      result.push([values[i] as number, i]);
-    } else if (typeof values[i] === 'number' && result.length === neigh) {
-      for (let j = 0; j < result.length; j++) {
-        if (values[i] as number > result[j][0]) {
-          result[j] = [values[i] as number, i];
-          break;
-        }
+  for (let i = 0; i < neigh; i++) {
+    let max: number = -Infinity;
+    let maxIndex: number = -1;
+    for (let j = 0; j < values.length; j++) {
+      if (typeof values[j] === 'number' && values[j] as number > max) {
+        max = values[j] as number;
+        maxIndex = j;
+      }
+    }
+    result.push([max, maxIndex]);
+    values[maxIndex] = -Infinity;
+  }
+  return result;
+}
+
+export function readMatrix(file: string): Array<Array<number | null>> {
+  const data: string = fs.readFileSync(file, 'utf8');
+  const rows: string[] = data.split('\r');
+  const result: Array<Array<number | null>> = [];
+  for (let i = 0; i < rows.length; i++) {
+    const cols: string[] = rows[i].split(' ');
+    result.push([]);
+    for (let j = 0; j < cols.length; j++) {
+      if (cols[j] === '-') {
+        result[i].push(null);
+      } else {
+        result[i].push(parseInt(cols[j], 10));
       }
     }
   }
   return result;
-}
-
-function readMatrix(file: string): Array<Array<number | null>> {
-  const lines: string[] = fs.readFileSync(file).toString().split('\r');
-  const result: Array<Array<number | null>> = [];
-  for (let i = 0; i < lines.length; i++) {
-    lines[i] = lines[i].trim();
-    if (lines[i] !== '') {
-      result.push(lines[i].split(' ').map((value: string) => {
-        if (value === '-') {
-          return null;
-        } else {
-          return Number(value);
-        }
-      }));
-    }
-  }
-  return result;
-}
-
-const input: string = process.argv[2];
-const matriz = readMatrix(input);
-
-console.log('Original matrix');
-for (let i = 0; i < matriz.length; i++) {
-  for (let j = 0; j < matriz[i].length; j++) {
-    if (typeof matriz[i][j] === 'number') {
-      process.stdout.write(matriz[i][j]?.toFixed(2) + ' ');
-    } else {
-      process.stdout.write('---- ');
-    }
-  }
-  process.stdout.write('\n');
-}
-
-const solution = solve(matriz, 3);
-
-console.log('\nSolution matrix');
-for (let i = 0; i < solution.length; i++) {
-  for (let j = 0; j < solution[i].length; j++) {
-    if (solution[i][j] as number % 1 === 0) {
-      process.stdout.write(solution[i][j]?.toFixed() + '.-- ');
-    } else {
-      process.stdout.write('\x1b[34m' + solution[i][j]?.toFixed(2) +
-          '\x1b[0m ');
-    }
-  }
-  process.stdout.write('\n');
 }

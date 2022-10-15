@@ -23,6 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.readMatrix = exports.neighValue = exports.avgRow = exports.calculatePearson = exports.solveByPearson = exports.solve = void 0;
 const fs = __importStar(require("fs"));
 function solve(matriz, neighbours) {
     const result = matriz;
@@ -35,6 +36,7 @@ function solve(matriz, neighbours) {
     }
     return result;
 }
+exports.solve = solve;
 function solveByPearson(matriz, i, j, numberOfNeighbours) {
     const correlationMatrix = calculatePearson(matriz, i, j);
     const neighbours = neighValue(correlationMatrix, numberOfNeighbours);
@@ -51,28 +53,27 @@ function solveByPearson(matriz, i, j, numberOfNeighbours) {
     }
     return avgI + (numerator / denominator);
 }
+exports.solveByPearson = solveByPearson;
 function calculatePearson(matriz, i, j) {
     const correlationMatrix = [];
     const avgI = avgRow(matriz[i]);
     for (let k = 0; k < matriz.length; k++) {
         if (k !== i) {
             const avgK = avgRow(matriz[k]);
-            let correlation = 0;
             let numerator = 0;
-            let denominator = 0;
+            let denominatorFirst = 0;
+            let denominatorSecond = 0;
             for (let l = 0; l < matriz[k].length; l++) {
                 if (typeof matriz[k][l] === 'number' &&
                     typeof matriz[i][l] === 'number') {
                     numerator +=
-                        (matriz[k][l] - avgK) *
-                            (matriz[i][l] - avgI);
-                    denominator +=
-                        Math.sqrt(Math.pow((matriz[k][l] - avgK), 2)) *
-                            Math.sqrt(Math.pow((matriz[i][l] - avgI), 2));
+                        (matriz[k][l] - avgK) * (matriz[i][l] - avgI);
+                    denominatorFirst += Math.pow((matriz[k][l] - avgK), 2);
+                    denominatorSecond += Math.pow((matriz[i][l] - avgI), 2);
                 }
             }
-            correlation = numerator / denominator;
-            correlationMatrix.push(correlation);
+            correlationMatrix.push(numerator /
+                (Math.sqrt(denominatorFirst) * Math.sqrt(denominatorSecond)));
         }
         else {
             correlationMatrix.push(null);
@@ -80,6 +81,7 @@ function calculatePearson(matriz, i, j) {
     }
     return correlationMatrix;
 }
+exports.calculatePearson = calculatePearson;
 function avgRow(row) {
     let sum = 0;
     let nullCount = 0;
@@ -93,65 +95,40 @@ function avgRow(row) {
     }
     return sum / (row.length - nullCount);
 }
+exports.avgRow = avgRow;
 function neighValue(values, neigh) {
     const result = []; // [value, index]
-    for (let i = 0; i < values.length; i++) {
-        if (typeof values[i] === 'number' && result.length < neigh) {
-            result.push([values[i], i]);
+    for (let i = 0; i < neigh; i++) {
+        let max = -Infinity;
+        let maxIndex = -1;
+        for (let j = 0; j < values.length; j++) {
+            if (typeof values[j] === 'number' && values[j] > max) {
+                max = values[j];
+                maxIndex = j;
+            }
         }
-        else if (typeof values[i] === 'number' && result.length === neigh) {
-            for (let j = 0; j < result.length; j++) {
-                if (values[i] > result[j][0]) {
-                    result[j] = [values[i], i];
-                    break;
-                }
+        result.push([max, maxIndex]);
+        values[maxIndex] = -Infinity;
+    }
+    return result;
+}
+exports.neighValue = neighValue;
+function readMatrix(file) {
+    const data = fs.readFileSync(file, 'utf8');
+    const rows = data.split('\r');
+    const result = [];
+    for (let i = 0; i < rows.length; i++) {
+        const cols = rows[i].split(' ');
+        result.push([]);
+        for (let j = 0; j < cols.length; j++) {
+            if (cols[j] === '-') {
+                result[i].push(null);
+            }
+            else {
+                result[i].push(parseInt(cols[j], 10));
             }
         }
     }
     return result;
 }
-function readMatrix(file) {
-    const lines = fs.readFileSync(file).toString().split('\r');
-    const result = [];
-    for (let i = 0; i < lines.length; i++) {
-        lines[i] = lines[i].trim();
-        if (lines[i] !== '') {
-            result.push(lines[i].split(' ').map((value) => {
-                if (value === '-') {
-                    return null;
-                }
-                else {
-                    return Number(value);
-                }
-            }));
-        }
-    }
-    return result;
-}
-const input = process.argv[2];
-const matriz = readMatrix(input);
-console.log('Original matrix');
-for (let i = 0; i < matriz.length; i++) {
-    for (let j = 0; j < matriz[i].length; j++) {
-        if (typeof matriz[i][j] === 'number') {
-            process.stdout.write(matriz[i][j]?.toFixed(2) + ' ');
-        }
-        else {
-            process.stdout.write('---- ');
-        }
-    }
-    process.stdout.write('\n');
-}
-const solution = solve(matriz, 3);
-console.log('\nSolution matrix');
-for (let i = 0; i < solution.length; i++) {
-    for (let j = 0; j < solution[i].length; j++) {
-        if (solution[i][j] % 1 === 0) {
-            process.stdout.write(solution[i][j]?.toFixed() + '.-- ');
-        }
-        else {
-            process.stdout.write('\x1b[34m' + solution[i][j]?.toFixed(2) + '\x1b[0m ');
-        }
-    }
-    process.stdout.write('\n');
-}
+exports.readMatrix = readMatrix;
