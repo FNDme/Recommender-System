@@ -23,64 +23,64 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readMatrix = exports.neighValue = exports.avgRow = exports.calculatePearson = exports.solveByPearson = exports.solve = void 0;
+exports.checkMatrixSize = exports.checkMatrixTypes = exports.readMatrix = exports.neighValue = exports.avgRow = exports.calculatePearson = exports.solveByPearson = exports.solve = void 0;
 const fs = __importStar(require("fs"));
 const process_1 = require("process");
-function solve(matriz, neighbours) {
-    const result = matriz;
-    for (let i = 0; i < matriz.length; i++) {
-        for (let j = 0; j < matriz[i].length; j++) {
-            if (matriz[i][j] === null) {
-                matriz[i][j] = result[i][j] = solveByPearson(matriz, i, j, neighbours);
+function solve(matrix, neighbours) {
+    const result = matrix;
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[i].length; j++) {
+            if (matrix[i][j] === null) {
+                matrix[i][j] = result[i][j] = solveByPearson(matrix, i, j, neighbours);
             }
         }
     }
     return result;
 }
 exports.solve = solve;
-function solveByPearson(matriz, i, j, numberOfNeighbours) {
-    const correlationMatrix = calculatePearson(matriz, i, j);
+function solveByPearson(matrix, i, j, numberOfNeighbours) {
+    const correlationMatrix = calculatePearson(matrix, i, j);
     const neighbours = neighValue(correlationMatrix, numberOfNeighbours);
-    const avgI = avgRow(matriz[i]);
+    const avgI = avgRow(matrix[i]);
     let numerator = 0;
     let denominator = 0;
     for (let k = 0; k < neighbours.length; k++) {
-        const avgJ = avgRow(matriz[neighbours[k][1]]);
-        if (typeof matriz[neighbours[k][1]][j] === 'number') {
+        const avgJ = avgRow(matrix[neighbours[k][1]]);
+        if (typeof matrix[neighbours[k][1]][j] === 'number') {
             numerator +=
-                (matriz[neighbours[k][1]][j] - avgJ) * neighbours[k][0];
+                (matrix[neighbours[k][1]][j] - avgJ) * neighbours[k][0];
             denominator += Math.abs(neighbours[k][0]);
         }
     }
     return avgI + (numerator / denominator);
 }
 exports.solveByPearson = solveByPearson;
-function calculatePearson(matriz, i, j) {
-    const correlationMatrix = [];
-    const avgI = avgRow(matriz[i]);
-    for (let k = 0; k < matriz.length; k++) {
+function calculatePearson(matrix, i, j) {
+    const correlationArray = [];
+    const avgI = avgRow(matrix[i]);
+    for (let k = 0; k < matrix.length; k++) {
         if (k !== i) {
-            const avgK = avgRow(matriz[k], matriz[i]);
+            const avgK = avgRow(matrix[k], matrix[i]);
             let numerator = 0;
             let denominatorFirst = 0;
             let denominatorSecond = 0;
-            for (let l = 0; l < matriz[k].length; l++) {
-                if (typeof matriz[k][l] === 'number' &&
-                    typeof matriz[i][l] === 'number') {
+            for (let l = 0; l < matrix[k].length; l++) {
+                if (typeof matrix[k][l] === 'number' &&
+                    typeof matrix[i][l] === 'number') {
                     numerator +=
-                        (matriz[k][l] - avgK) * (matriz[i][l] - avgI);
-                    denominatorFirst += Math.pow((matriz[k][l] - avgK), 2);
-                    denominatorSecond += Math.pow((matriz[i][l] - avgI), 2);
+                        (matrix[k][l] - avgK) * (matrix[i][l] - avgI);
+                    denominatorFirst += Math.pow((matrix[k][l] - avgK), 2);
+                    denominatorSecond += Math.pow((matrix[i][l] - avgI), 2);
                 }
             }
-            correlationMatrix.push(numerator /
+            correlationArray.push(numerator /
                 (Math.sqrt(denominatorFirst) * Math.sqrt(denominatorSecond)));
         }
         else {
-            correlationMatrix.push(null);
+            correlationArray.push(null);
         }
     }
-    return correlationMatrix;
+    return correlationArray;
 }
 exports.calculatePearson = calculatePearson;
 function avgRow(row, baseRow = row) {
@@ -116,10 +116,10 @@ function neighValue(values, neigh) {
 exports.neighValue = neighValue;
 function readMatrix(file) {
     const data = fs.readFileSync(file, 'utf8');
-    const rows = data.split('\r');
+    const rows = data.trim().split('\n');
     const result = [];
     for (let i = 0; i < rows.length; i++) {
-        const cols = rows[i].split(' ');
+        const cols = rows[i].trim().split(' ');
         result.push([]);
         for (let j = 0; j < cols.length; j++) {
             if (cols[j] === '-') {
@@ -130,12 +130,44 @@ function readMatrix(file) {
             }
         }
     }
+    if (!checkMatrixTypes(result)) {
+        console.error('Matrix is not valid');
+        throw new Error('Invalid matrix');
+    }
+    if (!checkMatrixSize(result)) {
+        console.error('Matrix size is not valid');
+        throw new Error('Invalid matrix size');
+    }
     return result;
 }
 exports.readMatrix = readMatrix;
-if (process_1.argv[2] && process_1.argv[3]) {
+function checkMatrixTypes(matrix) {
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[i].length; j++) {
+            if (typeof matrix[i][j] !== 'number' && matrix[i][j] !== null) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+exports.checkMatrixTypes = checkMatrixTypes;
+function checkMatrixSize(matrix) {
+    if (matrix.length < 2) {
+        return false;
+    }
+    const size = matrix[0].length;
+    for (let i = 0; i < matrix.length; i++) {
+        if (matrix[i].length < 2 || matrix[i].length !== size) {
+            return false;
+        }
+    }
+    return true;
+}
+exports.checkMatrixSize = checkMatrixSize;
+if (process_1.argv[2]) {
     const matrix = readMatrix(process_1.argv[2]);
-    const result = solve(matrix, parseInt(process_1.argv[3], 10));
+    const result = solve(matrix, process_1.argv[3] ? parseInt(process_1.argv[3], 10) : 1);
     for (let i = 0; i < result.length; i++) {
         for (let j = 0; j < result[i].length; j++) {
             process.stdout.write(result[i][j]?.toFixed(2) + ' ');
@@ -143,3 +175,4 @@ if (process_1.argv[2] && process_1.argv[3]) {
         process.stdout.write('\n');
     }
 }
+//# sourceMappingURL=index.js.map

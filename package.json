@@ -7,7 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start": "tsc && node ./dist/index.js ./examples/utility-matrix-5-10-1.txt 4",
+    "compile": "tsc"
   },
   "exclude": [
     "./test"

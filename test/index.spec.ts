@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
 import { solve, solveByPearson, calculatePearson,
-  avgRow, neighValue, readMatrix } from '../src/index';
+  avgRow, neighValue, readMatrix, checkMatrixTypes, checkMatrixSize } from '../src/index';
 
 describe('readMatrix', () => {
   it('should return a matrix', () => {
@@ -99,5 +99,50 @@ describe('solve', () => {
     expect((result[2][3] as number).toFixed(2)).to.be.equal('4.49');
     expect(result[4][1]).to.be.a('number');
     expect((result[4][1] as number).toFixed(2)).to.be.equal('3.04');
+  });
+});
+
+describe('checkMatrixTypes', () => {
+  it ('should return true if the matrix is valid', () => {
+    const test = [
+      [5, 3, 4, 4, null],
+      [3, 1, 2, 3, 3],
+      [4, 3, 4, 3, 5],
+      [3, 3, 1, 5, 4],
+      [1, 5, 5, 2, 1]];
+    expect(checkMatrixTypes(test)).to.be.true;
+  });
+
+  it ('should return false if the matrix is not valid', () => {
+    const test = [
+      [5, 3, 4, 4, null],
+      [3, 1, 2, 3, 3],
+      [4, 3, 4, 3, 5],
+      [3, 3, 1, 5, 4],
+      [1, 5, 5, '2', 1]];
+    expect(checkMatrixTypes(test)).to.be.false;
+  });
+});
+
+describe('checkMatrixSize', () => {
+  it ('should return true if the matrix is valid', () => {
+    const test = [
+      [5, 3, 4, 4, null],
+      [3, 1, 2, 3, 3],
+      [4, 3, 4, 3, 5],
+      [3, 3, 1, 5, 4],
+      [1, 5, 5, 2, 1]];
+    expect(checkMatrixSize(test)).to.be.true;
+  });
+
+  it ('should return false if the matrix is not valid', () => {
+    const test01 = [[1, 2, 3, 4, 5]];
+    const test02 = [[5, 3, 4, 4, null]];
+    const test03 = [[5], [3], [4], [4], [null]];
+    const test04 = [[5, 3, 4, 4, null], [3, 1, 2]];
+    expect(checkMatrixSize(test01)).to.be.false;
+    expect(checkMatrixSize(test02)).to.be.false;
+    expect(checkMatrixSize(test03)).to.be.false;
+    expect(checkMatrixSize(test04)).to.be.false;
   });
 });
