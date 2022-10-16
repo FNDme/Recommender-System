@@ -25,6 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readMatrix = exports.neighValue = exports.avgRow = exports.calculatePearson = exports.solveByPearson = exports.solve = void 0;
 const fs = __importStar(require("fs"));
+const process_1 = require("process");
 function solve(matriz, neighbours) {
     const result = matriz;
     for (let i = 0; i < matriz.length; i++) {
@@ -59,7 +60,7 @@ function calculatePearson(matriz, i, j) {
     const avgI = avgRow(matriz[i]);
     for (let k = 0; k < matriz.length; k++) {
         if (k !== i) {
-            const avgK = avgRow(matriz[k]);
+            const avgK = avgRow(matriz[k], matriz[i]);
             let numerator = 0;
             let denominatorFirst = 0;
             let denominatorSecond = 0;
@@ -82,11 +83,11 @@ function calculatePearson(matriz, i, j) {
     return correlationMatrix;
 }
 exports.calculatePearson = calculatePearson;
-function avgRow(row) {
+function avgRow(row, baseRow = row) {
     let sum = 0;
     let nullCount = 0;
     for (let i = 0; i < row.length; i++) {
-        if (typeof row[i] === 'number') {
+        if (typeof row[i] === 'number' && typeof baseRow[i] === 'number') {
             sum += row[i];
         }
         else {
@@ -132,3 +133,13 @@ function readMatrix(file) {
     return result;
 }
 exports.readMatrix = readMatrix;
+if (process_1.argv[2] && process_1.argv[3]) {
+    const matrix = readMatrix(process_1.argv[2]);
+    const result = solve(matrix, parseInt(process_1.argv[3], 10));
+    for (let i = 0; i < result.length; i++) {
+        for (let j = 0; j < result[i].length; j++) {
+            process.stdout.write(result[i][j]?.toFixed(2) + ' ');
+        }
+        process.stdout.write('\n');
+    }
+}

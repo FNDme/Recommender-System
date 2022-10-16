@@ -47,10 +47,10 @@ describe('calculatePearson', () => {
     expect(result.map((x) => typeof x == 'number' ?
         x.toFixed(2) : null)).to.deep.equal([
       null,
-      '0.84',
-      '0.61',
+      '0.85',
+      '0.71',
       '0.00',
-      '-0.77']);
+      '-0.79']);
   });
 });
 
@@ -64,7 +64,7 @@ describe('solveByPearson', () => {
       [1, 5, 5, 2, 1]];
     const result = solveByPearson(test, 0, 4, 2);
     expect(result).to.be.a('number');
-    expect(result.toFixed(2)).to.be.equal('4.85');
+    expect(result.toFixed(2)).to.be.equal('4.87');
   });
 });
 
@@ -80,7 +80,7 @@ describe('solve', () => {
     expect(result).to.be.an('array');
     expect(result[0]).to.be.a('array');
     expect(result[0][4]).to.be.a('number');
-    expect((result[0][4] as number).toFixed(2)).to.be.equal('4.85');
+    expect((result[0][4] as number).toFixed(2)).to.be.equal('4.87');
   });
 
   it('should return the solution for matrix with many spaces', () => {
@@ -94,10 +94,10 @@ describe('solve', () => {
     expect(result).to.be.an('array');
     expect(result[0]).to.be.a('array');
     expect(result[0][4]).to.be.a('number');
-    expect((result[0][4] as number).toFixed(2)).to.be.equal('4.78');
+    expect((result[0][4] as number).toFixed(2)).to.be.equal('4.80');
     expect(result[2][3]).to.be.a('number');
-    expect((result[2][3] as number).toFixed(2)).to.be.equal('4.47');
+    expect((result[2][3] as number).toFixed(2)).to.be.equal('4.49');
     expect(result[4][1]).to.be.a('number');
-    expect((result[4][1] as number).toFixed(2)).to.be.equal('3.00');
+    expect((result[4][1] as number).toFixed(2)).to.be.equal('3.04');
   });
 });

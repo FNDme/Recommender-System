@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { argv } from 'process';
 
 export function solve(matriz: Array<Array<number | null>>, neighbours: number):
     Array<Array<number | null>> {
@@ -39,7 +40,7 @@ export function calculatePearson(matriz: Array<Array<number | null>>,
   const avgI: number = avgRow(matriz[i]);
   for (let k = 0; k < matriz.length; k++) {
     if (k !== i) {
-      const avgK: number = avgRow(matriz[k]);
+      const avgK: number = avgRow(matriz[k], matriz[i]);
       let numerator: number = 0;
       let denominatorFirst: number = 0;
       let denominatorSecond: number = 0;
@@ -61,12 +62,12 @@ export function calculatePearson(matriz: Array<Array<number | null>>,
   return correlationMatrix;
 }
 
-export function avgRow(row: Array<number | null>): number {
+export function avgRow(row: Array<number | null>, baseRow: Array<number | null> = row): number {
   let sum: number = 0;
   let nullCount: number = 0;
 
   for (let i = 0; i < row.length; i++) {
-    if (typeof row[i] === 'number') {
+    if (typeof row[i] === 'number' && typeof baseRow[i] === 'number') {
       sum += row[i] as number;
     } else {
       nullCount++;
@@ -109,4 +110,15 @@ export function readMatrix(file: string): Array<Array<number | null>> {
     }
   }
   return result;
+}
+
+if (argv[2] && argv[3]) {
+  const matrix: Array<Array<number | null>> = readMatrix(argv[2]);
+  const result: Array<Array<number | null>> = solve(matrix, parseInt(argv[3], 10));
+  for (let i = 0; i < result.length; i++) {
+    for (let j = 0; j < result[i].length; j++) {
+      process.stdout.write(result[i][j]?.toFixed(2) + ' ');
+    }
+    process.stdout.write('\n');
+  }
 }
