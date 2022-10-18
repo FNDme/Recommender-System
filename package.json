@@ -10,7 +10,7 @@
     "test": "mocha",
     "start": "tsc && node ./dist/index.js ./examples/utility-matrix-5-10-1.txt 4",
     "compile": "tsc",
-    "coveralls": "nyc npm test && nyc report --reporter=lcov"
+    "coverage": "nyc npm test && nyc report --reporter=lcov"
   },
   "exclude": [
     "./test"
