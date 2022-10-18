@@ -90,8 +90,8 @@ h1 {
 }
 
 #response-block.error {
-  background-color: #FFCC00;
-  color: #ff3333;
+  background-color: hsl(48, 100%, 67%);
+  color: hsl(348, 100%, 61%);
   padding: 0.5em;
   border-radius: 6px;
   border-width: 2px;

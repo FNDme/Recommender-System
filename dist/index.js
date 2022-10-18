@@ -73,7 +73,7 @@ const enableBTN = [false, false]; // file - neighbours
                 const btn = link.appendChild(document.createElement("button"));
                 btn.setAttribute("class", "button is-dark");
                 btn.setAttribute("id", "download-btn");
-                btn.innerHTML = "Download";
+                btn.innerHTML = "Download as .txt";
                 link.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(matrixToString(result)));
                 link.setAttribute("download", "result.txt");
             }).catch((error) => {
