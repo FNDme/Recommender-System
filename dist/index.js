@@ -78,7 +78,10 @@ const enableBTN = [false, false]; // file - neighbours
                 link.setAttribute("download", "result.txt");
             }).catch((error) => {
                 if (response instanceof HTMLDivElement) {
-                    response.innerHTML = error;
+                    const githubLink = document.createElement("a");
+                    githubLink.setAttribute("href", "http://github.com/FNDme/recommender-system");
+                    githubLink.innerHTML = "GitHub";
+                    response.innerHTML = error + ": check " + githubLink.outerHTML + " for more info";
                     response.classList.add("error");
                     resultDiv.classList.remove("shown");
                 }
@@ -125,17 +128,14 @@ function readMatrix(input) {
                     }
                 }
                 if (!checkMatrixTypes(result)) {
-                    console.error('Matrix is not valid');
                     reject('Matrix is not valid');
                 }
                 if (!checkMatrixSize(result)) {
-                    console.error('Matrix size is not valid');
                     reject('Matrix size is not valid');
                 }
                 resolve(result);
             }
             else {
-                console.error('File is empty');
                 reject('File is empty');
             }
         }));

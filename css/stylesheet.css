@@ -97,3 +97,17 @@ h1 {
   border-width: 2px;
   border-style: solid;
 }
+
+.social-links {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 5em;
+  margin-bottom: 3em;
+  display: flex;
+  align-items: center;
+}
+
+.social-links > * {
+  margin-left: 1em;
+}
