@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
 import { solve, solveByPearson, calculatePearson,
-  avgRow, neighValue} from '../src/functions';
+  avgRow, neighValue, matrixToString} from '../src/functions';
 
 describe('avgRow', () => {
   it('should return the average of a row', () => {
@@ -88,5 +88,23 @@ describe('solve', () => {
     expect((result[2][3] as number).toFixed(2)).to.be.equal('4.49');
     expect(result[4][1]).to.be.a('number');
     expect((result[4][1] as number).toFixed(2)).to.be.equal('3.04');
+  });
+});
+
+describe('matrixToString', () => {
+  it('should return the matrix as a string', () => {
+    const test = [
+      [5, 3, 4, 4, null],
+      [3, 1, 2, 3, 3],
+      [4, 3, 4, 3, 5],
+      [3, 3, 1, 5, 4],
+      [1, 5, 5, 2, 1]];
+    const result = matrixToString(test);
+    expect(result).to.be.a('string');
+    expect(result).to.be.equal('5.00 3.00 4.00 4.00 -.--\n' +
+      '3.00 1.00 2.00 3.00 3.00\n' +
+      '4.00 3.00 4.00 3.00 5.00\n' +
+      '3.00 3.00 1.00 5.00 4.00\n' +
+      '1.00 5.00 5.00 2.00 1.00');
   });
 });
