@@ -1,5 +1,3 @@
-import * as fs from 'fs';
-
 export function solve(matrix: Array<Array<number | null>>, neighbours: number):
     Array<Array<number | null>> {
   const result: Array<Array<number | null>> = matrix;
@@ -91,35 +89,35 @@ export function neighValue(values: Array<number | null>,
   return result;
 }
 
-export function readMatrix(file: string): Array<Array<number | null>> {
-  if (!fs.existsSync(file)) {
-    throw new Error('File does not exist');
-  }
-  const data: string = fs.readFileSync(file, 'utf8')
-  if (data === '') {
-    throw new Error('File is empty');
-  }
-  const rows: string[] = data.trim().split('\n');
-  if (rows.length < 2) {
-    throw new Error('File does not contain enough rows');
-  }
-  const result: Array<Array<number | null>> = [];
-  const rowSize = rows[0].trim().split(' ').length;
-  for (let i = 0; i < rows.length; i++) {
-    const cols: string[] = rows[i].trim().split(' ');
-    if (cols.length !== rowSize) {
-      throw new Error('File does not contain a valid matrix');
-    }
-    result.push([]);
-    for (const col of cols) {
-      if (col === '-') {
-        result[i].push(null);
-      } else if(!isNaN(Number(col))) {
-        result[i].push(parseInt(col, 10));
-      } else {
-        throw new Error('Invalid matrix');
-      }
-    }
-  }
-  return result;
-}
+// export function readMatrix(file: string): Array<Array<number | null>> {
+//   if (!fs.existsSync(file)) {
+//     throw new Error('File does not exist');
+//   }
+//   const data: string = fs.readFileSync(file, 'utf8')
+//   if (data === '') {
+//     throw new Error('File is empty');
+//   }
+//   const rows: string[] = data.trim().split('\n');
+//   if (rows.length < 2) {
+//     throw new Error('File does not contain enough rows');
+//   }
+//   const result: Array<Array<number | null>> = [];
+//   const rowSize = rows[0].trim().split(' ').length;
+//   for (let i = 0; i < rows.length; i++) {
+//     const cols: string[] = rows[i].trim().split(' ');
+//     if (cols.length !== rowSize) {
+//       throw new Error('File does not contain a valid matrix');
+//     }
+//     result.push([]);
+//     for (const col of cols) {
+//       if (col === '-') {
+//         result[i].push(null);
+//       } else if(!isNaN(Number(col))) {
+//         result[i].push(parseInt(col, 10));
+//       } else {
+//         throw new Error('Invalid matrix');
+//       }
+//     }
+//   }
+//   return result;
+// }

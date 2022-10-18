@@ -1,38 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
 import { solve, solveByPearson, calculatePearson,
-  avgRow, neighValue, readMatrix } from '../src/functions';
-
-describe('readMatrix', () => {
-  it('should return a matrix', () => {
-    let result = readMatrix('./examples/test-01.txt');
-    expect(result).to.be.an('array');
-    expect(result[0]).to.be.an('array');
-    expect(result[0][0]).to.be.a('number' || 'null');
-    expect(result).to.have.lengthOf(5);
-    expect(result[0]).to.have.lengthOf(5);
-  });
-
-  it('should throw an error if the file does not exist', () => {
-    expect(() => readMatrix('./void.txt')).to.throw('File does not exist');
-  });
-
-  it('should throw an error if the file is empty', () => {
-    expect(() => readMatrix('./examples/invalid-matrix-5-5-3.txt')).to.throw('File is empty');
-  });
-
-  it('should throw an error if the matrix is not valid', () => {
-    expect(() => readMatrix('./examples/invalid-matrix-5-5-1.txt')).to.throw('Invalid matrix');
-  });
-
-  it('should throw an error if the matrix has not rows enough', () => {
-    expect(() => readMatrix('./examples/invalid-matrix-5-5-2.txt')).to.throw('File does not contain enough rows');
-  });
-
-  it('should throw an error if the rows have not the same size', () => {
-    expect(() => readMatrix('./examples/invalid-matrix-5-5-4.txt')).to.throw('File does not contain a valid matrix');
-  });
-});
+  avgRow, neighValue} from '../src/functions';
 
 describe('avgRow', () => {
   it('should return the average of a row', () => {

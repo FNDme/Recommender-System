@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var _a, _b, _c;
-import { solve } from "./functions";
+import { solve } from "./functions.js";
 const enableBTN = [false, false]; // file - neighbours
 (_a = document.getElementById("file-input")) === null || _a === void 0 ? void 0 : _a.addEventListener("change", function (event) {
     var _a, _b, _c;

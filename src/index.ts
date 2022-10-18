@@ -1,4 +1,4 @@
-import { solve } from "./functions";
+import { solve } from "./functions.js";
 
 const enableBTN = [false, false]; // file - neighbours
 
