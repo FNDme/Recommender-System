@@ -41,12 +41,12 @@ document.getElementById("submit-btn")?.addEventListener("click", function (event
         if (result.length <= 15 && result[0].length <= 15) {
           if (resultDiv instanceof HTMLDivElement) {
             resultDiv.innerHTML = "";
-            for (let i = 0; i < result.length; i++) {
+            for (const line of result) {
               const row = document.createElement("div");
               if (row instanceof HTMLDivElement) {
                 row.classList.add("row");
-                for (let j = 0; j < result[i].length; j++) {
-                  row.innerHTML += `<div class="cell">${result[i][j] === null ? '-.--' : result[i][j]?.toFixed(2)}</div>`;
+                for (const item of line) {
+                  row.innerHTML += `<div class="cell">${item === null ? '-.--' : item?.toFixed(2)}</div>`;
                 }
                 resultDiv.appendChild(row);
               }
@@ -104,11 +104,11 @@ async function readMatrix(input: HTMLInputElement): Promise<Array<Array<number |
       for (let i = 0; i < rows.length; i++) {
         const cols: string[] = rows[i].trim().split(' ');
         result.push([]);
-        for (let j = 0; j < cols.length; j++) {
-          if (cols[j] === '-') {
+        for (const col of cols) {
+          if (col === '-') {
             result[i].push(null);
           } else {
-            result[i].push(parseInt(cols[j], 10));
+            result[i].push(parseInt(col, 10));
           }
         }
       }
@@ -126,9 +126,9 @@ async function readMatrix(input: HTMLInputElement): Promise<Array<Array<number |
 }
 
 function checkMatrixTypes(matrix: any): boolean {
-  for (let i = 0; i < matrix.length; i++) {
-    for (let j = 0; j < matrix[i].length; j++) {
-      if (typeof matrix[i][j] !== 'number' && matrix[i][j] !== null) {
+  for (const row of matrix) {
+    for (const item of row) {
+      if (typeof item !== 'number' && item !== null) {
         return false;
       }
     }
@@ -141,8 +141,8 @@ function checkMatrixSize(matrix: Array<Array<number | null>>): boolean {
     return false;
   }
   const size: number = matrix[0].length;
-  for (let i = 0; i < matrix.length; i++) {
-    if (matrix[i].length < 2 || matrix[i].length !== size) {
+  for (const row of matrix) {
+    if (row.length < 2 || row.length !== size) {
       return false;
     }
   }
@@ -171,12 +171,12 @@ function solveByPearson(matrix: Array<Array<number | null>>,
   const avgI: number = avgRow(matrix[i]);
   let numerator: number = 0;
   let denominator: number = 0;
-  for (let k = 0; k < neighbours.length; k++) {
-    const avgJ: number = avgRow(matrix[neighbours[k][1]]);
-    if (typeof matrix[neighbours[k][1]][j] === 'number') {
+  for (const neighbour of neighbours) {
+    const avgJ: number = avgRow(matrix[neighbour[1]]);
+    if (typeof matrix[neighbour[1]][j] === 'number') {
       numerator +=
-        (matrix[neighbours[k][1]][j] as number - avgJ) * neighbours[k][0];
-      denominator += Math.abs(neighbours[k][0]);
+        (matrix[neighbour[1]][j] as number - avgJ) * neighbour[0];
+      denominator += Math.abs(neighbour[0]);
     }
   }
   return avgI + (numerator / denominator);

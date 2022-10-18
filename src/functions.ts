@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import { argv } from 'process';
 
 export function solve(matrix: Array<Array<number | null>>, neighbours: number):
     Array<Array<number | null>> {
@@ -23,11 +22,11 @@ export function solveByPearson(matrix: Array<Array<number | null>>,
   const avgI: number = avgRow(matrix[i]);
   let numerator: number = 0;
   let denominator: number = 0;
-  for (let k = 0; k < neighbours.length; k++) {
-    const avgJ: number = avgRow(matrix[neighbours[k][1]]);
+  for (const neighbour of neighbours) {
+    const avgJ: number = avgRow(matrix[neighbour[1]]);
     numerator +=
-      (matrix[neighbours[k][1]][j] as number - avgJ) * neighbours[k][0];
-    denominator += Math.abs(neighbours[k][0]);
+      (matrix[neighbour[1]][j] as number - avgJ) * neighbour[0];
+    denominator += Math.abs(neighbour[0]);
   }
   return avgI + (numerator / denominator);
 }
@@ -112,11 +111,11 @@ export function readMatrix(file: string): Array<Array<number | null>> {
       throw new Error('File does not contain a valid matrix');
     }
     result.push([]);
-    for (let j = 0; j < cols.length; j++) {
-      if (cols[j] === '-') {
+    for (const col of cols) {
+      if (col === '-') {
         result[i].push(null);
-      } else if(!isNaN(Number(cols[j]))) {
-        result[i].push(parseInt(cols[j], 10));
+      } else if(!isNaN(Number(col))) {
+        result[i].push(parseInt(col, 10));
       } else {
         throw new Error('Invalid matrix');
       }
