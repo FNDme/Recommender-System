@@ -7,8 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var _a, _b, _c;
-import { solve } from "./functions.js";
+var _a, _b, _c, _d, _e;
+import { solve, matrixToString } from "./functions.js";
 const enableBTN = [false, false]; // file - neighbours
 (_a = document.getElementById("file-input")) === null || _a === void 0 ? void 0 : _a.addEventListener("change", function (event) {
     var _a, _b, _c;
@@ -88,150 +88,49 @@ const enableBTN = [false, false]; // file - neighbours
         }
     }
 });
-// --------------------------------------------
-function matrixToString(matrix) {
-    var _a;
-    let result = "";
-    for (let i = 0; i < matrix.length; i++) {
-        for (let j = 0; j < matrix[i].length; j++) {
-            result += matrix[i][j] === null ? '-.--' : (_a = matrix[i][j]) === null || _a === void 0 ? void 0 : _a.toFixed(2);
-            if (j !== matrix[i].length - 1) {
-                result += " ";
+(_d = document.getElementById("info-btn")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", function (event) {
+    console.log(document.getElementsByClassName("popup")[0]);
+    document.getElementsByClassName("popup")[0].classList.remove("hidden");
+    document.getElementsByClassName("popup")[0].classList.add("shown");
+});
+(_e = document.getElementById("close-btn")) === null || _e === void 0 ? void 0 : _e.addEventListener("click", function (event) {
+    document.getElementsByClassName("popup")[0].classList.remove("shown");
+    document.getElementsByClassName("popup")[0].classList.add("hidden");
+});
+// ----------------------------
+export function readMatrix(input) {
+    return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        var _a;
+        const file = (_a = input.files) === null || _a === void 0 ? void 0 : _a.item(0);
+        const data = yield (file === null || file === void 0 ? void 0 : file.text());
+        if (data) {
+            const rows = data.trim().split('\n');
+            if (rows.length < 2) {
+                reject("File must contain enough rows");
             }
-        }
-        if (i !== matrix.length - 1) {
-            result += "\n";
-        }
-    }
-    return result;
-}
-function readMatrix(input) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            const file = (_a = input.files) === null || _a === void 0 ? void 0 : _a.item(0);
-            const data = yield (file === null || file === void 0 ? void 0 : file.text());
-            if (data === '') {
-                reject("File is empty");
-            }
-            if (data) {
-                const rows = data.trim().split('\n');
-                if (rows.length < 2) {
-                    reject("File must contain enough rows");
+            const result = [];
+            const rowSize = rows[0].trim().split(' ').length;
+            for (let i = 0; i < rows.length; i++) {
+                const cols = rows[i].trim().split(' ');
+                if (cols.length !== rowSize) {
+                    reject("File does not contain a valid matrix");
                 }
-                const result = [];
-                const rowSize = rows[0].trim().split(' ').length;
-                for (let i = 0; i < rows.length; i++) {
-                    const cols = rows[i].trim().split(' ');
-                    if (cols.length !== rowSize) {
-                        reject("File does not contain a valid matrix");
+                result.push([]);
+                for (const col of cols) {
+                    if (col === '-') {
+                        result[i].push(null);
+                        continue;
                     }
-                    result.push([]);
-                    for (const col of cols) {
-                        if (col === '-') {
-                            result[i].push(null);
-                        }
-                        else if (!isNaN(Number(col))) {
-                            result[i].push(parseInt(col, 10));
-                        }
-                        else {
-                            reject("Invalid value in file");
-                        }
+                    else if (isNaN(Number(col))) {
+                        reject("Invalid value in file");
                     }
+                    result[i].push(parseInt(col, 10));
                 }
-                resolve(result);
             }
-            else {
-                reject("File is empty");
-            }
-        }));
-    });
+            console.log(result);
+            resolve(result);
+        }
+        reject("File is empty");
+    }));
 }
-// function solve(matrix: Array<Array<number | null>>, neighbours: number):
-//     Array<Array<number | null>> {
-//   const result: Array<Array<number | null>> = matrix;
-//   for (let i = 0; i < matrix.length; i++) {
-//     for (let j = 0; j < matrix[i].length; j++) {
-//       if (matrix[i][j] === null) {
-//         matrix[i][j] = result[i][j] = solveByPearson(matrix, i, j, neighbours);
-//       }
-//     }
-//   }
-//   return result;
-// }
-// function solveByPearson(matrix: Array<Array<number | null>>,
-//     i: number, j: number, numberOfNeighbours: number): number {
-//   const correlationMatrix: Array<number | null> =
-//     calculatePearson(matrix, i, j);
-//   const neighbours: [number, number][] =
-//     neighValue(correlationMatrix, numberOfNeighbours);
-//   const avgI: number = avgRow(matrix[i]);
-//   let numerator: number = 0;
-//   let denominator: number = 0;
-//   for (const neighbour of neighbours) {
-//     const avgJ: number = avgRow(matrix[neighbour[1]]);
-//     if (typeof matrix[neighbour[1]][j] === 'number') {
-//       numerator +=
-//         (matrix[neighbour[1]][j] as number - avgJ) * neighbour[0];
-//       denominator += Math.abs(neighbour[0]);
-//     }
-//   }
-//   return avgI + (numerator / denominator);
-// }
-// function calculatePearson(matrix: Array<Array<number | null>>,
-//     i: number, j: number): Array<number | null> {
-//   const correlationArray: Array<number | null> = [];
-//   const avgI: number = avgRow(matrix[i]);
-//   for (let k = 0; k < matrix.length; k++) {
-//     if (k !== i) {
-//       const avgK: number = avgRow(matrix[k], matrix[i]);
-//       let numerator: number = 0;
-//       let denominatorFirst: number = 0;
-//       let denominatorSecond: number = 0;
-//       for (let l = 0; l < matrix[k].length; l++) {
-//         if (typeof matrix[k][l] === 'number' &&
-//             typeof matrix[i][l] === 'number') {
-//           numerator +=
-//             (matrix[k][l] as number - avgK) * (matrix[i][l] as number - avgI);
-//           denominatorFirst += Math.pow((matrix[k][l] as number - avgK), 2);
-//           denominatorSecond += Math.pow((matrix[i][l] as number - avgI), 2);
-//         }
-//       }
-//       correlationArray.push(numerator /
-//       (Math.sqrt(denominatorFirst) * Math.sqrt(denominatorSecond)));
-//     } else {
-//       correlationArray.push(null);
-//     }
-//   }
-//   return correlationArray;
-// }
-// function avgRow(row: Array<number | null>, baseRow: Array<number | null> = row): number {
-//   let sum: number = 0;
-//   let nullCount: number = 0;
-//   for (let i = 0; i < row.length; i++) {
-//     if (typeof row[i] === 'number' && typeof baseRow[i] === 'number') {
-//       sum += row[i] as number;
-//     } else {
-//       nullCount++;
-//     }
-//   }
-//   return sum / (row.length - nullCount);
-// }
-// function neighValue(values: Array<number | null>,
-//     neigh: number): [number, number][] {
-//   const result: [number, number][] = []; // [value, index]
-//   for (let i = 0; i < neigh; i++) {
-//     let max: number = -Infinity;
-//     let maxIndex: number = -1;
-//     for (let j = 0; j < values.length; j++) {
-//       if (typeof values[j] === 'number' && values[j] as number > max) {
-//         max = values[j] as number;
-//         maxIndex = j;
-//       }
-//     }
-//     result.push([max, maxIndex]);
-//     values[maxIndex] = -Infinity;
-//   }
-//   return result;
-// }
 //# sourceMappingURL=index.js.map

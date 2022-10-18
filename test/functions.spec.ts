@@ -94,17 +94,22 @@ describe('solve', () => {
 describe('matrixToString', () => {
   it('should return the matrix as a string', () => {
     const test = [
-      [5, 3, 4, 4, null],
-      [3, 1, 2, 3, 3],
-      [4, 3, 4, 3, 5],
-      [3, 3, 1, 5, 4],
-      [1, 5, 5, 2, 1]];
+      [5, 3, 4, 4, 4.87123],
+      [3, 1, 3, 3, 3],
+      [4, 3, 4, 3, null],
+      [null, null, null, 5, 4],
+      [1, 5, 5.08779, 2, 1]];
     const result = matrixToString(test);
     expect(result).to.be.a('string');
-    expect(result).to.be.equal('5.00 3.00 4.00 4.00 -.--\n' +
-      '3.00 1.00 2.00 3.00 3.00\n' +
-      '4.00 3.00 4.00 3.00 5.00\n' +
-      '3.00 3.00 1.00 5.00 4.00\n' +
-      '1.00 5.00 5.00 2.00 1.00');
+    expect(result).to.be.equal(
+      '5.00 3.00 4.00 4.00 4.87\n' +
+      '3.00 1.00 3.00 3.00 3.00\n' +
+      '4.00 3.00 4.00 3.00 -.--\n' +
+      '-.-- -.-- -.-- 5.00 4.00\n' +
+      '1.00 5.00 5.09 2.00 1.00');
+    expect(result).to.contain('4.87');
+    expect(result).to.contain('-.--');
+    expect(result).to.contain('\n');
+    expect(result).to.contain(' ');
   });
 });

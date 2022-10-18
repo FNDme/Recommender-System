@@ -1,4 +1,4 @@
-import { solve, readMatrix, matrixToString } from "./functions.js";
+import { solve, matrixToString } from "./functions.js";
 
 const enableBTN = [false, false]; // file - neighbours
 
@@ -77,3 +77,50 @@ document.getElementById("submit-btn")?.addEventListener("click", function (event
     }
   }
 });
+
+document.getElementById("info-btn")?.addEventListener("click", function (event) {
+  console.log(document.getElementsByClassName("popup")[0]);
+  document.getElementsByClassName("popup")[0].classList.remove("hidden");
+  document.getElementsByClassName("popup")[0].classList.add("shown");
+});
+
+document.getElementById("close-btn")?.addEventListener("click", function (event) {
+  document.getElementsByClassName("popup")[0].classList.remove("shown");
+  document.getElementsByClassName("popup")[0].classList.add("hidden");
+});
+
+// ----------------------------
+
+export function readMatrix(input: HTMLInputElement): Promise<Array<Array<number | null>>> {
+  return new Promise(async (resolve, reject) => {
+    const file = input.files?.item(0);
+    const data = await file?.text();
+    if (data) {
+      const rows: string[] = data.trim().split('\n');
+      if (rows.length < 2) {
+        reject("File must contain enough rows");
+      }
+      const result: Array<Array<number | null>> = [];
+      const rowSize = rows[0].trim().split(' ').length;
+      for (let i = 0; i < rows.length; i++) {
+        const cols: string[] = rows[i].trim().split(' ');
+        if (cols.length !== rowSize) {
+          reject("File does not contain a valid matrix");
+        }
+        result.push([]);
+        for (const col of cols) {
+          if (col === '-') {
+            result[i].push(null);
+            continue;
+          } else if (isNaN(Number(col))) {
+            reject("Invalid value in file");
+          }
+          result[i].push(parseInt(col, 10));
+        }
+      }
+      console.log(result);
+      resolve(result);
+    }
+    reject("File is empty");
+  });
+}

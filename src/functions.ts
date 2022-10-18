@@ -89,38 +89,6 @@ export function neighValue(values: Array<number | null>,
   return result;
 }
 
-export function readMatrix(input: HTMLInputElement): Promise<Array<Array<number | null>>> {
-  return new Promise(async (resolve, reject) => {
-    const file = input.files?.item(0);
-    const data = await file?.text();
-    if (data) {
-      const rows: string[] = data.trim().split('\n');
-      if (rows.length < 2) {
-        reject("File must contain enough rows");
-      }
-      const result: Array<Array<number | null>> = [];
-      const rowSize = rows[0].trim().split(' ').length;
-      for (let i = 0; i < rows.length; i++) {
-        const cols: string[] = rows[i].trim().split(' ');
-        if (cols.length !== rowSize) {
-          reject("File does not contain a valid matrix");
-        }
-        result.push([]);
-        for (const col of cols) {
-          if (col === '-') {
-            result[i].push(null);
-          } else if (isNaN(Number(col))) {
-            reject("Invalid value in file");
-          }
-          result[i].push(parseInt(col, 10));
-        }
-      }
-      resolve(result);
-    }
-    reject("File is empty");
-  });
-}
-
 export function matrixToString(matrix: Array<Array<number | null>>): string {
   let result = "";
   for (let i = 0; i < matrix.length; i++) {
