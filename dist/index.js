@@ -42,11 +42,15 @@ const enableBTN = [false, false]; // file - neighbours
     if (event.target instanceof HTMLButtonElement) {
         const file = document.getElementById("file-input");
         const neighbours = document.getElementById("neighbours-input");
+        const resultDiv = document.getElementById("solution");
+        const response = document.getElementById("response-block");
         if (file instanceof HTMLInputElement && neighbours instanceof HTMLInputElement) {
             readMatrix(file).then((matrix) => {
                 var _a;
+                response.innerHTML = "";
+                response.classList.remove("error");
                 const result = solve(matrix, parseInt(neighbours.value));
-                const resultDiv = document.getElementById("solution");
+                resultDiv.classList.add("shown");
                 if (result.length <= 15 && result[0].length <= 15) {
                     if (resultDiv instanceof HTMLDivElement) {
                         resultDiv.innerHTML = "";
@@ -72,6 +76,12 @@ const enableBTN = [false, false]; // file - neighbours
                 btn.innerHTML = "Download";
                 link.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(matrixToString(result)));
                 link.setAttribute("download", "result.txt");
+            }).catch((error) => {
+                if (response instanceof HTMLDivElement) {
+                    response.innerHTML = error;
+                    response.classList.add("error");
+                    resultDiv.classList.remove("shown");
+                }
             });
         }
     }
@@ -94,40 +104,42 @@ function matrixToString(matrix) {
     return result;
 }
 function readMatrix(input) {
-    return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-        var _a;
-        const file = (_a = input.files) === null || _a === void 0 ? void 0 : _a.item(0);
-        const data = yield (file === null || file === void 0 ? void 0 : file.text());
-        if (data) {
-            const rows = data.trim().split('\n');
-            const result = [];
-            for (let i = 0; i < rows.length; i++) {
-                const cols = rows[i].trim().split(' ');
-                result.push([]);
-                for (let j = 0; j < cols.length; j++) {
-                    if (cols[j] === '-') {
-                        result[i].push(null);
-                    }
-                    else {
-                        result[i].push(parseInt(cols[j], 10));
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            const file = (_a = input.files) === null || _a === void 0 ? void 0 : _a.item(0);
+            const data = yield (file === null || file === void 0 ? void 0 : file.text());
+            if (data) {
+                const rows = data.trim().split('\n');
+                const result = [];
+                for (let i = 0; i < rows.length; i++) {
+                    const cols = rows[i].trim().split(' ');
+                    result.push([]);
+                    for (let j = 0; j < cols.length; j++) {
+                        if (cols[j] === '-') {
+                            result[i].push(null);
+                        }
+                        else {
+                            result[i].push(parseInt(cols[j], 10));
+                        }
                     }
                 }
+                if (!checkMatrixTypes(result)) {
+                    console.error('Matrix is not valid');
+                    reject('Matrix is not valid');
+                }
+                if (!checkMatrixSize(result)) {
+                    console.error('Matrix size is not valid');
+                    reject('Matrix size is not valid');
+                }
+                resolve(result);
             }
-            if (!checkMatrixTypes(result)) {
-                console.error('Matrix is not valid');
-                reject('Matrix is not valid');
+            else {
+                console.error('File is empty');
+                reject('File is empty');
             }
-            if (!checkMatrixSize(result)) {
-                console.error('Matrix size is not valid');
-                reject('Matrix size is not valid');
-            }
-            resolve(result);
-        }
-        else {
-            console.error('File is empty');
-            reject('File is empty');
-        }
-    }));
+        }));
+    });
 }
 function checkMatrixTypes(matrix) {
     for (let i = 0; i < matrix.length; i++) {

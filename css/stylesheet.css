@@ -70,7 +70,7 @@ h1 {
   margin: 0;
 }
 
-#solution {
+#solution.shown {
   background-color: #282828;
   color: #DCDCDC;
   display: flex;
@@ -87,4 +87,13 @@ h1 {
 
 #solution > * > * {
   margin: 0.5em;
+}
+
+#response-block.error {
+  background-color: #FFCC00;
+  color: #ff3333;
+  padding: 0.5em;
+  border-radius: 6px;
+  border-width: 2px;
+  border-style: solid;
 }

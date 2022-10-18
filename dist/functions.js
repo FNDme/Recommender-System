@@ -1,3 +1,6 @@
+var _a;
+import * as fs from 'fs';
+import { argv } from 'process';
 export function solve(matrix, neighbours) {
     const result = matrix;
     for (let i = 0; i < matrix.length; i++) {
@@ -81,31 +84,32 @@ export function neighValue(values, neigh) {
     }
     return result;
 }
-// export function readMatrix(file: string): Array<Array<number | null>> {
-//   const data: string = fs.readFileSync(file, 'utf8')
-//   const rows: string[] = data.trim().split('\n');
-//   const result: Array<Array<number | null>> = [];
-//   for (let i = 0; i < rows.length; i++) {
-//     const cols: string[] = rows[i].trim().split(' ');
-//     result.push([]);
-//     for (let j = 0; j < cols.length; j++) {
-//       if (cols[j] === '-') {
-//         result[i].push(null);
-//       } else {
-//         result[i].push(parseInt(cols[j], 10));
-//       }
-//     }
-//   }
-//   if (!checkMatrixTypes(result)) {
-//     console.error('Matrix is not valid');
-//     throw new Error('Invalid matrix');
-//   }
-//   if (!checkMatrixSize(result)) {
-//     console.error('Matrix size is not valid');
-//     throw new Error('Invalid matrix size');
-//   }
-//   return result;
-// }
+export function readMatrix(file) {
+    const data = fs.readFileSync(file, 'utf8');
+    const rows = data.trim().split('\n');
+    const result = [];
+    for (let i = 0; i < rows.length; i++) {
+        const cols = rows[i].trim().split(' ');
+        result.push([]);
+        for (let j = 0; j < cols.length; j++) {
+            if (cols[j] === '-') {
+                result[i].push(null);
+            }
+            else {
+                result[i].push(parseInt(cols[j], 10));
+            }
+        }
+    }
+    if (!checkMatrixTypes(result)) {
+        console.error('Matrix is not valid');
+        throw new Error('Invalid matrix');
+    }
+    if (!checkMatrixSize(result)) {
+        console.error('Matrix size is not valid');
+        throw new Error('Invalid matrix size');
+    }
+    return result;
+}
 export function checkMatrixTypes(matrix) {
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[i].length; j++) {
@@ -128,14 +132,14 @@ export function checkMatrixSize(matrix) {
     }
     return true;
 }
-// if (argv[2]) {
-//   const matrix: Array<Array<number | null>> = readMatrix(argv[2]);
-//   const result: Array<Array<number | null>> = solve(matrix, argv[3] ? parseInt(argv[3], 10) : 1);
-//   for (let i = 0; i < result.length; i++) {
-//     for (let j = 0; j < result[i].length; j++) {
-//       process.stdout.write(result[i][j]?.toFixed(2) + ' ');
-//     }
-//     process.stdout.write('\n');
-//   }
-// }
+if (argv[2]) {
+    const matrix = readMatrix(argv[2]);
+    const result = solve(matrix, argv[3] ? parseInt(argv[3], 10) : 1);
+    for (let i = 0; i < result.length; i++) {
+        for (let j = 0; j < result[i].length; j++) {
+            process.stdout.write(((_a = result[i][j]) === null || _a === void 0 ? void 0 : _a.toFixed(2)) + ' ');
+        }
+        process.stdout.write('\n');
+    }
+}
 //# sourceMappingURL=functions.js.map

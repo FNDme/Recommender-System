@@ -30,10 +30,14 @@ document.getElementById("submit-btn")?.addEventListener("click", function (event
   if (event.target instanceof HTMLButtonElement) {
     const file = document.getElementById("file-input") as HTMLInputElement;
     const neighbours = document.getElementById("neighbours-input") as HTMLInputElement;
+    const resultDiv = document.getElementById("solution") as HTMLDivElement;
+    const response = document.getElementById("response-block") as HTMLDivElement;
     if (file instanceof HTMLInputElement && neighbours instanceof HTMLInputElement) {
       readMatrix(file).then((matrix) => {
+        response.innerHTML = "";
+        response.classList.remove("error");
         const result: Array<Array<number | null>> = solve(matrix, parseInt(neighbours.value));
-        const resultDiv = document.getElementById("solution") as HTMLDivElement;
+        resultDiv.classList.add("shown");
         if (result.length <= 15 && result[0].length <= 15) {
           if (resultDiv instanceof HTMLDivElement) {
             resultDiv.innerHTML = "";
@@ -58,6 +62,12 @@ document.getElementById("submit-btn")?.addEventListener("click", function (event
         btn.innerHTML = "Download";
         link.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(matrixToString(result)));
         link.setAttribute("download", "result.txt");
+      }).catch((error) => {
+        if (response instanceof HTMLDivElement) {
+          response.innerHTML = error;
+          response.classList.add("error");
+          resultDiv.classList.remove("shown");
+        }
       });
     }
   }
@@ -81,7 +91,7 @@ function matrixToString(matrix: Array<Array<number | null>>): string {
   return result;
 }
 
-function readMatrix(input: HTMLInputElement): Promise<Array<Array<number | null>>> {
+async function readMatrix(input: HTMLInputElement): Promise<Array<Array<number | null>>> {
   return new Promise(async (resolve, reject) => {
     const file = input.files?.item(0);
     const data = await file?.text();
