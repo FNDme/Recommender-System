@@ -1,8 +1,10 @@
-export declare function solve(matrix: Array<Array<number | null>>, neighbours: number): Array<Array<number | null>>;
-export declare function solveByPearson(matrix: Array<Array<number | null>>, i: number, j: number, numberOfNeighbours: number): number;
-export declare function calculatePearson(matrix: Array<Array<number | null>>, i: number, j: number): Array<number | null>;
-export declare function avgRow(row: Array<number | null>, baseRow?: Array<number | null>): number;
-export declare function neighValue(values: Array<number | null>, neigh: number): [number, number][];
-export declare function readMatrix(file: string): Array<Array<number | null>>;
-export declare function checkMatrixTypes(matrix: any): boolean;
-export declare function checkMatrixSize(matrix: Array<Array<number | null>>): boolean;
+declare const enableBTN: boolean[];
+declare function matrixToString(matrix: Array<Array<number | null>>): string;
+declare function readMatrix(input: HTMLInputElement): Promise<Array<Array<number | null>>>;
+declare function checkMatrixTypes(matrix: any): boolean;
+declare function checkMatrixSize(matrix: Array<Array<number | null>>): boolean;
+declare function solve(matrix: Array<Array<number | null>>, neighbours: number): Array<Array<number | null>>;
+declare function solveByPearson(matrix: Array<Array<number | null>>, i: number, j: number, numberOfNeighbours: number): number;
+declare function calculatePearson(matrix: Array<Array<number | null>>, i: number, j: number): Array<number | null>;
+declare function avgRow(row: Array<number | null>, baseRow?: Array<number | null>): number;
+declare function neighValue(values: Array<number | null>, neigh: number): [number, number][];

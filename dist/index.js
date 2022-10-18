@@ -1,31 +1,156 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkMatrixSize = exports.checkMatrixTypes = exports.readMatrix = exports.neighValue = exports.avgRow = exports.calculatePearson = exports.solveByPearson = exports.solve = void 0;
-const fs = __importStar(require("fs"));
-const process_1 = require("process");
+var _a, _b, _c;
+const enableBTN = [false, false]; // file - neighbours
+(_a = document.getElementById("file-input")) === null || _a === void 0 ? void 0 : _a.addEventListener("change", function (event) {
+    var _a, _b, _c;
+    if (event.target instanceof HTMLInputElement) {
+        enableBTN[0] = true;
+        if (enableBTN[0] && enableBTN[1]) {
+            (_a = document.getElementById("submit-btn")) === null || _a === void 0 ? void 0 : _a.removeAttribute("disabled");
+        }
+        else {
+            if (!((_b = document.getElementById("submit")) === null || _b === void 0 ? void 0 : _b.hasAttribute("disabled"))) {
+                (_c = document.getElementById("submit")) === null || _c === void 0 ? void 0 : _c.setAttribute("disabled", "");
+            }
+        }
+    }
+});
+(_b = document.getElementById("neighbours-input")) === null || _b === void 0 ? void 0 : _b.addEventListener("change", function (event) {
+    var _a, _b, _c;
+    if (event.target instanceof HTMLInputElement) {
+        enableBTN[1] = true;
+        if (enableBTN[0] && enableBTN[1]) {
+            (_a = document.getElementById("submit-btn")) === null || _a === void 0 ? void 0 : _a.removeAttribute("disabled");
+        }
+        else {
+            if (!((_b = document.getElementById("submit")) === null || _b === void 0 ? void 0 : _b.hasAttribute("disabled"))) {
+                (_c = document.getElementById("submit")) === null || _c === void 0 ? void 0 : _c.setAttribute("disabled", "");
+            }
+        }
+    }
+});
+(_c = document.getElementById("submit-btn")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", function (event) {
+    if (event.target instanceof HTMLButtonElement) {
+        const file = document.getElementById("file-input");
+        const neighbours = document.getElementById("neighbours-input");
+        if (file instanceof HTMLInputElement && neighbours instanceof HTMLInputElement) {
+            readMatrix(file).then((matrix) => {
+                var _a;
+                const result = solve(matrix, parseInt(neighbours.value));
+                const resultDiv = document.getElementById("solution");
+                if (result.length <= 15 && result[0].length <= 15) {
+                    if (resultDiv instanceof HTMLDivElement) {
+                        resultDiv.innerHTML = "";
+                        for (let i = 0; i < result.length; i++) {
+                            const row = document.createElement("div");
+                            if (row instanceof HTMLDivElement) {
+                                row.classList.add("row");
+                                for (let j = 0; j < result[i].length; j++) {
+                                    row.innerHTML += `<div class="cell">${result[i][j] === null ? '-.--' : (_a = result[i][j]) === null || _a === void 0 ? void 0 : _a.toFixed(2)}</div>`;
+                                }
+                                resultDiv.appendChild(row);
+                            }
+                        }
+                    }
+                }
+                else {
+                    resultDiv.innerHTML = "Result is too big to display";
+                }
+                const link = resultDiv.appendChild(document.createElement("a"));
+                const btn = link.appendChild(document.createElement("button"));
+                btn.setAttribute("class", "button is-dark");
+                btn.setAttribute("id", "download-btn");
+                btn.innerHTML = "Download";
+                link.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(matrixToString(result)));
+                link.setAttribute("download", "result.txt");
+            });
+        }
+    }
+});
+// --------------------------------------------
+function matrixToString(matrix) {
+    var _a;
+    let result = "";
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[i].length; j++) {
+            result += matrix[i][j] === null ? '-.--' : (_a = matrix[i][j]) === null || _a === void 0 ? void 0 : _a.toFixed(2);
+            if (j !== matrix[i].length - 1) {
+                result += " ";
+            }
+        }
+        if (i !== matrix.length - 1) {
+            result += "\n";
+        }
+    }
+    return result;
+}
+function readMatrix(input) {
+    return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        var _a;
+        const file = (_a = input.files) === null || _a === void 0 ? void 0 : _a.item(0);
+        const data = yield (file === null || file === void 0 ? void 0 : file.text());
+        if (data) {
+            const rows = data.trim().split('\n');
+            const result = [];
+            for (let i = 0; i < rows.length; i++) {
+                const cols = rows[i].trim().split(' ');
+                result.push([]);
+                for (let j = 0; j < cols.length; j++) {
+                    if (cols[j] === '-') {
+                        result[i].push(null);
+                    }
+                    else {
+                        result[i].push(parseInt(cols[j], 10));
+                    }
+                }
+            }
+            if (!checkMatrixTypes(result)) {
+                console.error('Matrix is not valid');
+                reject('Matrix is not valid');
+            }
+            if (!checkMatrixSize(result)) {
+                console.error('Matrix size is not valid');
+                reject('Matrix size is not valid');
+            }
+            resolve(result);
+        }
+        else {
+            console.error('File is empty');
+            reject('File is empty');
+        }
+    }));
+}
+function checkMatrixTypes(matrix) {
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[i].length; j++) {
+            if (typeof matrix[i][j] !== 'number' && matrix[i][j] !== null) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+function checkMatrixSize(matrix) {
+    if (matrix.length < 2) {
+        return false;
+    }
+    const size = matrix[0].length;
+    for (let i = 0; i < matrix.length; i++) {
+        if (matrix[i].length < 2 || matrix[i].length !== size) {
+            return false;
+        }
+    }
+    return true;
+}
 function solve(matrix, neighbours) {
     const result = matrix;
     for (let i = 0; i < matrix.length; i++) {
@@ -37,7 +162,6 @@ function solve(matrix, neighbours) {
     }
     return result;
 }
-exports.solve = solve;
 function solveByPearson(matrix, i, j, numberOfNeighbours) {
     const correlationMatrix = calculatePearson(matrix, i, j);
     const neighbours = neighValue(correlationMatrix, numberOfNeighbours);
@@ -54,7 +178,6 @@ function solveByPearson(matrix, i, j, numberOfNeighbours) {
     }
     return avgI + (numerator / denominator);
 }
-exports.solveByPearson = solveByPearson;
 function calculatePearson(matrix, i, j) {
     const correlationArray = [];
     const avgI = avgRow(matrix[i]);
@@ -82,7 +205,6 @@ function calculatePearson(matrix, i, j) {
     }
     return correlationArray;
 }
-exports.calculatePearson = calculatePearson;
 function avgRow(row, baseRow = row) {
     let sum = 0;
     let nullCount = 0;
@@ -96,7 +218,6 @@ function avgRow(row, baseRow = row) {
     }
     return sum / (row.length - nullCount);
 }
-exports.avgRow = avgRow;
 function neighValue(values, neigh) {
     const result = []; // [value, index]
     for (let i = 0; i < neigh; i++) {
@@ -112,67 +233,5 @@ function neighValue(values, neigh) {
         values[maxIndex] = -Infinity;
     }
     return result;
-}
-exports.neighValue = neighValue;
-function readMatrix(file) {
-    const data = fs.readFileSync(file, 'utf8');
-    const rows = data.trim().split('\n');
-    const result = [];
-    for (let i = 0; i < rows.length; i++) {
-        const cols = rows[i].trim().split(' ');
-        result.push([]);
-        for (let j = 0; j < cols.length; j++) {
-            if (cols[j] === '-') {
-                result[i].push(null);
-            }
-            else {
-                result[i].push(parseInt(cols[j], 10));
-            }
-        }
-    }
-    if (!checkMatrixTypes(result)) {
-        console.error('Matrix is not valid');
-        throw new Error('Invalid matrix');
-    }
-    if (!checkMatrixSize(result)) {
-        console.error('Matrix size is not valid');
-        throw new Error('Invalid matrix size');
-    }
-    return result;
-}
-exports.readMatrix = readMatrix;
-function checkMatrixTypes(matrix) {
-    for (let i = 0; i < matrix.length; i++) {
-        for (let j = 0; j < matrix[i].length; j++) {
-            if (typeof matrix[i][j] !== 'number' && matrix[i][j] !== null) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-exports.checkMatrixTypes = checkMatrixTypes;
-function checkMatrixSize(matrix) {
-    if (matrix.length < 2) {
-        return false;
-    }
-    const size = matrix[0].length;
-    for (let i = 0; i < matrix.length; i++) {
-        if (matrix[i].length < 2 || matrix[i].length !== size) {
-            return false;
-        }
-    }
-    return true;
-}
-exports.checkMatrixSize = checkMatrixSize;
-if (process_1.argv[2]) {
-    const matrix = readMatrix(process_1.argv[2]);
-    const result = solve(matrix, process_1.argv[3] ? parseInt(process_1.argv[3], 10) : 1);
-    for (let i = 0; i < result.length; i++) {
-        for (let j = 0; j < result[i].length; j++) {
-            process.stdout.write(result[i][j]?.toFixed(2) + ' ');
-        }
-        process.stdout.write('\n');
-    }
 }
 //# sourceMappingURL=index.js.map

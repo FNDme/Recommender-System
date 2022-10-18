@@ -8,7 +8,7 @@
 				"$tsc"
 			],
 			"group": "build",
-			"label": "tsc: compilación: tsconfig.json"
+			"label": "tsc: build - tsconfig.json"
 		}
 	]
 }

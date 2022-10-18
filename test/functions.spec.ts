@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
 import { solve, solveByPearson, calculatePearson,
-  avgRow, neighValue, readMatrix, checkMatrixTypes, checkMatrixSize } from '../src/index';
+  avgRow, neighValue, readMatrix, checkMatrixTypes, checkMatrixSize } from '../src/functions';
 
 describe('readMatrix', () => {
   it('should return a matrix', () => {

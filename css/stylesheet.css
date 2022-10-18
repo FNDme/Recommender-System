@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap');
+
+html {
+  background-color: #282828 !important;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 2.5rem;
+  color: #282828;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+}
+
+.main-block {
+  background-color: #DCDCDC;
+  text-align: center;
+  border-radius: 10px;
+  margin: 2em;
+  padding: 2em;
+  height: calc(100vh - 4em);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.main-block > * {
+  margin: 0.5em;
+}
+
+.number-input {
+  font-weight: 700;
+  background-color: hsl(0, 0%, 21%);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  height: max-content;
+  display: flex;
+  align-items: center;
+  padding: 0.2em;
+  border-radius: 4px;
+}
+
+.number-input > * {
+  margin: 0.5em;
+}
+
+.number-input > .label {
+  font-size: 0.7em;
+  color: #DCDCDC;
+}
+
+.number-input > input {
+  font-size: 0.7em;
+  color: #282828;
+  text-align: center;
+  border: none;
+  background-color: #DCDCDC;
+  min-width: 3em;
+  max-width: fit-content;
+  border-radius: 4px;
+}
+
+.number-input > input::-webkit-outer-spin-button,
+.number-input > input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#solution {
+  background-color: #282828;
+  color: #DCDCDC;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5em;
+  border-radius: 6px
+}
+
+#solution > * {
+  display: flex;
+  align-items: center;
+}
+
+#solution > * > * {
+  margin: 0.5em;
+}

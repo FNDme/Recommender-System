@@ -1,7 +1,145 @@
-import * as fs from 'fs';
-import { argv } from 'process';
+const enableBTN = [false, false]; // file - neighbours
 
-export function solve(matrix: Array<Array<number | null>>, neighbours: number):
+document.getElementById("file-input")?.addEventListener("change", function (event) {
+  if (event.target instanceof HTMLInputElement) {
+    enableBTN[0] = true;
+    if (enableBTN[0] && enableBTN[1]) {
+      document.getElementById("submit-btn")?.removeAttribute("disabled");
+    } else {
+      if (!document.getElementById("submit")?.hasAttribute("disabled")) {
+        document.getElementById("submit")?.setAttribute("disabled", "");
+      }
+    }
+  }
+});
+
+document.getElementById("neighbours-input")?.addEventListener("change", function (event) {
+  if (event.target instanceof HTMLInputElement) {
+    enableBTN[1] = true;
+    if (enableBTN[0] && enableBTN[1]) {
+      document.getElementById("submit-btn")?.removeAttribute("disabled");
+    } else {
+      if (!document.getElementById("submit")?.hasAttribute("disabled")) {
+        document.getElementById("submit")?.setAttribute("disabled", "");
+      }
+    }
+  }
+});
+
+document.getElementById("submit-btn")?.addEventListener("click", function (event) {
+  if (event.target instanceof HTMLButtonElement) {
+    const file = document.getElementById("file-input") as HTMLInputElement;
+    const neighbours = document.getElementById("neighbours-input") as HTMLInputElement;
+    if (file instanceof HTMLInputElement && neighbours instanceof HTMLInputElement) {
+      readMatrix(file).then((matrix) => {
+        const result: Array<Array<number | null>> = solve(matrix, parseInt(neighbours.value));
+        const resultDiv = document.getElementById("solution") as HTMLDivElement;
+        if (result.length <= 15 && result[0].length <= 15) {
+          if (resultDiv instanceof HTMLDivElement) {
+            resultDiv.innerHTML = "";
+            for (let i = 0; i < result.length; i++) {
+              const row = document.createElement("div");
+              if (row instanceof HTMLDivElement) {
+                row.classList.add("row");
+                for (let j = 0; j < result[i].length; j++) {
+                  row.innerHTML += `<div class="cell">${result[i][j] === null ? '-.--' : result[i][j]?.toFixed(2)}</div>`;
+                }
+                resultDiv.appendChild(row);
+              }
+            }
+          }
+        } else {
+          resultDiv.innerHTML = "Result is too big to display";
+        }
+        const link = resultDiv.appendChild(document.createElement("a"));
+        const btn = link.appendChild(document.createElement("button"));
+        btn.setAttribute("class", "button is-dark");
+        btn.setAttribute("id", "download-btn");
+        btn.innerHTML = "Download";
+        link.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(matrixToString(result)));
+        link.setAttribute("download", "result.txt");
+      });
+    }
+  }
+});
+
+// --------------------------------------------
+
+function matrixToString(matrix: Array<Array<number | null>>): string {
+  let result = "";
+  for (let i = 0; i < matrix.length; i++) {
+    for (let j = 0; j < matrix[i].length; j++) {
+      result += matrix[i][j] === null ? '-.--' : matrix[i][j]?.toFixed(2);
+      if (j !== matrix[i].length - 1) {
+        result += " ";
+      }
+    }
+    if (i !== matrix.length - 1) {
+      result += "\n";
+    }
+  }
+  return result;
+}
+
+function readMatrix(input: HTMLInputElement): Promise<Array<Array<number | null>>> {
+  return new Promise(async (resolve, reject) => {
+    const file = input.files?.item(0);
+    const data = await file?.text();
+    if (data) {
+      const rows: string[] = data.trim().split('\n');
+      const result: Array<Array<number | null>> = [];
+      for (let i = 0; i < rows.length; i++) {
+        const cols: string[] = rows[i].trim().split(' ');
+        result.push([]);
+        for (let j = 0; j < cols.length; j++) {
+          if (cols[j] === '-') {
+            result[i].push(null);
+          } else {
+            result[i].push(parseInt(cols[j], 10));
+          }
+        }
+      }
+      if (!checkMatrixTypes(result)) {
+        console.error('Matrix is not valid');
+        reject('Matrix is not valid');
+      }
+      if (!checkMatrixSize(result)) {
+        console.error('Matrix size is not valid');
+        reject('Matrix size is not valid');
+      }
+      resolve(result);
+    } else {
+      console.error('File is empty');
+      reject('File is empty');
+    }
+  });
+}
+
+function checkMatrixTypes(matrix: any): boolean {
+  for (let i = 0; i < matrix.length; i++) {
+    for (let j = 0; j < matrix[i].length; j++) {
+      if (typeof matrix[i][j] !== 'number' && matrix[i][j] !== null) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function checkMatrixSize(matrix: Array<Array<number | null>>): boolean {
+  if (matrix.length < 2) {
+    return false;
+  }
+  const size: number = matrix[0].length;
+  for (let i = 0; i < matrix.length; i++) {
+    if (matrix[i].length < 2 || matrix[i].length !== size) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function solve(matrix: Array<Array<number | null>>, neighbours: number):
     Array<Array<number | null>> {
   const result: Array<Array<number | null>> = matrix;
   for (let i = 0; i < matrix.length; i++) {
@@ -14,7 +152,7 @@ export function solve(matrix: Array<Array<number | null>>, neighbours: number):
   return result;
 }
 
-export function solveByPearson(matrix: Array<Array<number | null>>,
+function solveByPearson(matrix: Array<Array<number | null>>,
     i: number, j: number, numberOfNeighbours: number): number {
   const correlationMatrix: Array<number | null> =
     calculatePearson(matrix, i, j);
@@ -34,7 +172,7 @@ export function solveByPearson(matrix: Array<Array<number | null>>,
   return avgI + (numerator / denominator);
 }
 
-export function calculatePearson(matrix: Array<Array<number | null>>,
+function calculatePearson(matrix: Array<Array<number | null>>,
     i: number, j: number): Array<number | null> {
   const correlationArray: Array<number | null> = [];
   const avgI: number = avgRow(matrix[i]);
@@ -62,7 +200,7 @@ export function calculatePearson(matrix: Array<Array<number | null>>,
   return correlationArray;
 }
 
-export function avgRow(row: Array<number | null>, baseRow: Array<number | null> = row): number {
+function avgRow(row: Array<number | null>, baseRow: Array<number | null> = row): number {
   let sum: number = 0;
   let nullCount: number = 0;
 
@@ -76,7 +214,7 @@ export function avgRow(row: Array<number | null>, baseRow: Array<number | null> 
   return sum / (row.length - nullCount);
 }
 
-export function neighValue(values: Array<number | null>,
+function neighValue(values: Array<number | null>,
     neigh: number): [number, number][] {
   const result: [number, number][] = []; // [value, index]
   for (let i = 0; i < neigh; i++) {
@@ -92,65 +230,4 @@ export function neighValue(values: Array<number | null>,
     values[maxIndex] = -Infinity;
   }
   return result;
-}
-
-export function readMatrix(file: string): Array<Array<number | null>> {
-  const data: string = fs.readFileSync(file, 'utf8')
-  const rows: string[] = data.trim().split('\n');
-  const result: Array<Array<number | null>> = [];
-  for (let i = 0; i < rows.length; i++) {
-    const cols: string[] = rows[i].trim().split(' ');
-    result.push([]);
-    for (let j = 0; j < cols.length; j++) {
-      if (cols[j] === '-') {
-        result[i].push(null);
-      } else {
-        result[i].push(parseInt(cols[j], 10));
-      }
-    }
-  }
-  if (!checkMatrixTypes(result)) {
-    console.error('Matrix is not valid');
-    throw new Error('Invalid matrix');
-  }
-  if (!checkMatrixSize(result)) {
-    console.error('Matrix size is not valid');
-    throw new Error('Invalid matrix size');
-  }
-  return result;
-}
-
-export function checkMatrixTypes(matrix: any): boolean {
-  for (let i = 0; i < matrix.length; i++) {
-    for (let j = 0; j < matrix[i].length; j++) {
-      if (typeof matrix[i][j] !== 'number' && matrix[i][j] !== null) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
-export function checkMatrixSize(matrix: Array<Array<number | null>>): boolean {
-  if (matrix.length < 2) {
-    return false;
-  }
-  const size: number = matrix[0].length;
-  for (let i = 0; i < matrix.length; i++) {
-    if (matrix[i].length < 2 || matrix[i].length !== size) {
-      return false;
-    }
-  }
-  return true;
-}
-
-if (argv[2]) {
-  const matrix: Array<Array<number | null>> = readMatrix(argv[2]);
-  const result: Array<Array<number | null>> = solve(matrix, argv[3] ? parseInt(argv[3], 10) : 1);
-  for (let i = 0; i < result.length; i++) {
-    for (let j = 0; j < result[i].length; j++) {
-      process.stdout.write(result[i][j]?.toFixed(2) + ' ');
-    }
-    process.stdout.write('\n');
-  }
 }
