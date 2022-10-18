@@ -98,9 +98,6 @@ async function readMatrix(input: HTMLInputElement): Promise<Array<Array<number |
   return new Promise(async (resolve, reject) => {
     const file = input.files?.item(0);
     const data = await file?.text();
-    if (data === '') {
-      reject("File is empty");
-    }
     if (data) {
       const rows: string[] = data.trim().split('\n');
       if (rows.length < 2) {
@@ -117,11 +114,10 @@ async function readMatrix(input: HTMLInputElement): Promise<Array<Array<number |
         for (const col of cols) {
           if (col === '-') {
             result[i].push(null);
-          } else if (!isNaN(Number(col))) {
-            result[i].push(parseInt(col, 10));
-          } else {
+          } else if (isNaN(Number(col))) {
             reject("Invalid value in file");
           }
+          result[i].push(parseInt(col, 10));
         }
       }
       resolve(result);
