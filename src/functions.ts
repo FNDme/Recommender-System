@@ -25,11 +25,9 @@ export function solveByPearson(matrix: Array<Array<number | null>>,
   let denominator: number = 0;
   for (let k = 0; k < neighbours.length; k++) {
     const avgJ: number = avgRow(matrix[neighbours[k][1]]);
-    if (typeof matrix[neighbours[k][1]][j] === 'number') {
-      numerator +=
-        (matrix[neighbours[k][1]][j] as number - avgJ) * neighbours[k][0];
-      denominator += Math.abs(neighbours[k][0]);
-    }
+    numerator +=
+      (matrix[neighbours[k][1]][j] as number - avgJ) * neighbours[k][0];
+    denominator += Math.abs(neighbours[k][0]);
   }
   return avgI + (numerator / denominator);
 }
@@ -95,62 +93,34 @@ export function neighValue(values: Array<number | null>,
 }
 
 export function readMatrix(file: string): Array<Array<number | null>> {
+  if (!fs.existsSync(file)) {
+    throw new Error('File does not exist');
+  }
   const data: string = fs.readFileSync(file, 'utf8')
+  if (data === '') {
+    throw new Error('File is empty');
+  }
   const rows: string[] = data.trim().split('\n');
+  if (rows.length < 2) {
+    throw new Error('File does not contain enough rows');
+  }
   const result: Array<Array<number | null>> = [];
+  const rowSize = rows[0].trim().split(' ').length;
   for (let i = 0; i < rows.length; i++) {
     const cols: string[] = rows[i].trim().split(' ');
+    if (cols.length !== rowSize) {
+      throw new Error('File does not contain a valid matrix');
+    }
     result.push([]);
     for (let j = 0; j < cols.length; j++) {
       if (cols[j] === '-') {
         result[i].push(null);
-      } else {
+      } else if(!isNaN(Number(cols[j]))) {
         result[i].push(parseInt(cols[j], 10));
+      } else {
+        throw new Error('Invalid matrix');
       }
     }
-  }
-  if (!checkMatrixTypes(result)) {
-    console.error('Matrix is not valid');
-    throw new Error('Invalid matrix');
-  }
-  if (!checkMatrixSize(result)) {
-    console.error('Matrix size is not valid');
-    throw new Error('Invalid matrix size');
   }
   return result;
-}
-
-export function checkMatrixTypes(matrix: any): boolean {
-  for (let i = 0; i < matrix.length; i++) {
-    for (let j = 0; j < matrix[i].length; j++) {
-      if (typeof matrix[i][j] !== 'number' && matrix[i][j] !== null) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
-export function checkMatrixSize(matrix: Array<Array<number | null>>): boolean {
-  if (matrix.length < 2) {
-    return false;
-  }
-  const size: number = matrix[0].length;
-  for (let i = 0; i < matrix.length; i++) {
-    if (matrix[i].length < 2 || matrix[i].length !== size) {
-      return false;
-    }
-  }
-  return true;
-}
-
-if (argv[2]) {
-  const matrix: Array<Array<number | null>> = readMatrix(argv[2]);
-  const result: Array<Array<number | null>> = solve(matrix, argv[3] ? parseInt(argv[3], 10) : 1);
-  for (let i = 0; i < result.length; i++) {
-    for (let j = 0; j < result[i].length; j++) {
-      process.stdout.write(result[i][j]?.toFixed(2) + ' ');
-    }
-    process.stdout.write('\n');
-  }
 }

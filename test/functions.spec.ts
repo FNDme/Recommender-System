@@ -1,16 +1,36 @@
 import 'mocha';
 import { expect } from 'chai';
 import { solve, solveByPearson, calculatePearson,
-  avgRow, neighValue, readMatrix, checkMatrixTypes, checkMatrixSize } from '../src/functions';
+  avgRow, neighValue, readMatrix } from '../src/functions';
 
 describe('readMatrix', () => {
   it('should return a matrix', () => {
-    const result = readMatrix('./examples/test-01.txt');
+    let result = readMatrix('./examples/test-01.txt');
     expect(result).to.be.an('array');
     expect(result[0]).to.be.an('array');
     expect(result[0][0]).to.be.a('number' || 'null');
     expect(result).to.have.lengthOf(5);
     expect(result[0]).to.have.lengthOf(5);
+  });
+
+  it('should throw an error if the file does not exist', () => {
+    expect(() => readMatrix('./void.txt')).to.throw('File does not exist');
+  });
+
+  it('should throw an error if the file is empty', () => {
+    expect(() => readMatrix('./examples/invalid-matrix-5-5-3.txt')).to.throw('File is empty');
+  });
+
+  it('should throw an error if the matrix is not valid', () => {
+    expect(() => readMatrix('./examples/invalid-matrix-5-5-1.txt')).to.throw('Invalid matrix');
+  });
+
+  it('should throw an error if the matrix has not rows enough', () => {
+    expect(() => readMatrix('./examples/invalid-matrix-5-5-2.txt')).to.throw('File does not contain enough rows');
+  });
+
+  it('should throw an error if the rows have not the same size', () => {
+    expect(() => readMatrix('./examples/invalid-matrix-5-5-4.txt')).to.throw('File does not contain a valid matrix');
   });
 });
 
@@ -99,50 +119,5 @@ describe('solve', () => {
     expect((result[2][3] as number).toFixed(2)).to.be.equal('4.49');
     expect(result[4][1]).to.be.a('number');
     expect((result[4][1] as number).toFixed(2)).to.be.equal('3.04');
-  });
-});
-
-describe('checkMatrixTypes', () => {
-  it ('should return true if the matrix is valid', () => {
-    const test = [
-      [5, 3, 4, 4, null],
-      [3, 1, 2, 3, 3],
-      [4, 3, 4, 3, 5],
-      [3, 3, 1, 5, 4],
-      [1, 5, 5, 2, 1]];
-    expect(checkMatrixTypes(test)).to.be.true;
-  });
-
-  it ('should return false if the matrix is not valid', () => {
-    const test = [
-      [5, 3, 4, 4, null],
-      [3, 1, 2, 3, 3],
-      [4, 3, 4, 3, 5],
-      [3, 3, 1, 5, 4],
-      [1, 5, 5, '2', 1]];
-    expect(checkMatrixTypes(test)).to.be.false;
-  });
-});
-
-describe('checkMatrixSize', () => {
-  it ('should return true if the matrix is valid', () => {
-    const test = [
-      [5, 3, 4, 4, null],
-      [3, 1, 2, 3, 3],
-      [4, 3, 4, 3, 5],
-      [3, 3, 1, 5, 4],
-      [1, 5, 5, 2, 1]];
-    expect(checkMatrixSize(test)).to.be.true;
-  });
-
-  it ('should return false if the matrix is not valid', () => {
-    const test01 = [[1, 2, 3, 4, 5]];
-    const test02 = [[5, 3, 4, 4, null]];
-    const test03 = [[5], [3], [4], [4], [null]];
-    const test04 = [[5, 3, 4, 4, null], [3, 1, 2]];
-    expect(checkMatrixSize(test01)).to.be.false;
-    expect(checkMatrixSize(test02)).to.be.false;
-    expect(checkMatrixSize(test03)).to.be.false;
-    expect(checkMatrixSize(test04)).to.be.false;
   });
 });

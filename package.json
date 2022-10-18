@@ -9,7 +9,8 @@
   "scripts": {
     "test": "mocha",
     "start": "tsc && node ./dist/index.js ./examples/utility-matrix-5-10-1.txt 4",
-    "compile": "tsc"
+    "compile": "tsc",
+    "coveralls": "nyc npm test && nyc report --reporter=lcov"
   },
   "exclude": [
     "./test"
@@ -23,6 +24,7 @@
     "eslint": "^8.25.0",
     "eslint-config-google": "^0.14.0",
     "mocha": "^10.0.0",
+    "nyc": "^15.1.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.8.4"
   },
