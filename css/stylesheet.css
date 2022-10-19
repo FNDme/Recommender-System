@@ -214,3 +214,41 @@ h1 {
   text-align: center;
   width: fit-content;
 }
+
+div.submit-algorithm {
+  display: flex;
+  align-items: center;
+}
+
+div.submit-algorithm > div.control {
+  margin: 0.5em;
+  margin-right: 2em;
+  width: 140px;
+  background-color: #282828;
+  padding: 0.5em;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start
+}
+
+div.submit-algorithm > div.control > label {
+  color: #DCDCDC;
+  margin-left: 8px;
+}
+
+div.submit-algorithm > div.control input {
+  margin-left: 1em;
+  margin-right: 0.3em;
+  appearance: none;
+  width: 1em;
+  height: 1em;
+  background-color: #DCDCDC;
+  border-radius: 5px;
+  border: 2px solid #DCDCDC;
+  padding: 3px;
+}
+
+div.submit-algorithm > div.control input:checked {
+  background-color: #282828;
+}

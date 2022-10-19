@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
-import { solve, solveByPearson, calculatePearson,
-  avgRow, neighValue, matrixToString} from '../src/functions';
+import { algorithm, solve, solveAlgorithm, calculatePearson, calculateCosine,
+  calculateEuclidean, avgRow, neighValue, matrixToString, } from '../src/functions';
 
 describe('avgRow', () => {
   it('should return the average of a row', () => {
@@ -31,7 +31,7 @@ describe('calculatePearson', () => {
       [4, 3, 4, 3, 5],
       [3, 3, 1, 5, 4],
       [1, 5, 5, 2, 1]];
-    const result = calculatePearson(test, 0, 0);
+    const result = calculatePearson(test, 0);
     expect(result).to.be.an('array');
     expect(result.map((x) => typeof x == 'number' ?
         x.toFixed(2) : null)).to.deep.equal([
@@ -43,7 +43,7 @@ describe('calculatePearson', () => {
   });
 });
 
-describe('solveByPearson', () => {
+describe('solveAlgorithm', () => {
   it('should return the solution', () => {
     const test = [
       [5, 3, 4, 4, null],
@@ -51,9 +51,15 @@ describe('solveByPearson', () => {
       [4, 3, 4, 3, 5],
       [3, 3, 1, 5, 4],
       [1, 5, 5, 2, 1]];
-    const result = solveByPearson(test, 0, 4, 2);
+    const result = solveAlgorithm(test, 0, 4, 'Euclidean', 2);
+    const result2 = solveAlgorithm(test, 0, 4, 'Pearson', 2);
+    const result3 = solveAlgorithm(test, 0, 4, 'Cosine', 2);
     expect(result).to.be.a('number');
-    expect(result.toFixed(2)).to.be.equal('4.87');
+    expect(result.toFixed(2)).to.be.equal('3.31');
+    expect(result2).to.be.a('number');
+    expect(result2.toFixed(2)).to.be.equal('4.87');
+    expect(result3).to.be.a('number');
+    expect(result3.toFixed(2)).to.be.equal('4.90');
   });
 });
 
@@ -79,7 +85,7 @@ describe('solve', () => {
       [4, 3, 4, null, 5],
       [3, 3, 1, 5, 4],
       [1, null, 5, 2, 1]];
-    const result = solve(test, 3);
+    const result = solve(test, 3, 'Pearson');
     expect(result).to.be.an('array');
     expect(result[0]).to.be.a('array');
     expect(result[0][4]).to.be.a('number');
@@ -97,7 +103,7 @@ describe('solve', () => {
       [4, 3, 4, null, 5],
       [3, 3, 1, 5, 4],
       [1, null, 5, 2, 1]];
-    expect(() => solve(test, 6)).to.throw('Neighbours count is bigger than matrix rows');
+    expect(() => solve(test, 6, 'Pearson')).to.throw('Neighbours count is bigger than matrix rows');
   });
 
   it('should throw an error if neighbours value is less than 1', () => {
@@ -107,7 +113,7 @@ describe('solve', () => {
       [4, 3, 4, null, 5],
       [3, 3, 1, 5, 4],
       [1, null, 5, 2, 1]];
-    expect(() => solve(test, 0)).to.throw('Neighbours count is less than 1');
+    expect(() => solve(test, -1, 'Pearson')).to.throw('Neighbours count is less than 1');
   });
 });
 

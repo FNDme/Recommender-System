@@ -1,4 +1,6 @@
-export function solve(matrix: Array<Array<number | null>>, neighbours: number):
+export type algorithm = 'Pearson' | 'Cosine' | 'Euclidean';
+
+export function solve(matrix: Array<Array<number | null>>, neighbours: number, algorithm: algorithm = 'Pearson'):
     Array<Array<number | null>> {
   const result: Array<Array<number | null>> = matrix;
   if (neighbours > matrix.length) {
@@ -10,17 +12,27 @@ export function solve(matrix: Array<Array<number | null>>, neighbours: number):
   for (let i = 0; i < matrix.length; i++) {
     for (let j = 0; j < matrix[i].length; j++) {
       if (matrix[i][j] === null) {
-        matrix[i][j] = result[i][j] = solveByPearson(matrix, i, j, neighbours);
+        result[i][j] = solveAlgorithm(matrix, i, j, algorithm, neighbours);
       }
     }
   }
   return result;
 }
 
-export function solveByPearson(matrix: Array<Array<number | null>>,
-    i: number, j: number, numberOfNeighbours: number): number {
-  const correlationMatrix: Array<number | null> =
-    calculatePearson(matrix, i, j);
+export function solveAlgorithm(matrix: Array<Array<number | null>>,
+    i: number, j: number, algorithm: algorithm, numberOfNeighbours: number): number {
+  let correlationMatrix: Array<number | null>;
+  switch (algorithm) {
+    case 'Pearson':
+      correlationMatrix = calculatePearson(matrix, i);
+      break;
+    case 'Cosine':
+      correlationMatrix = calculateCosine(matrix, i);
+      break;
+    case 'Euclidean':
+      correlationMatrix = calculateEuclidean(matrix, i);
+      break;
+  }
   const neighbours: [number, number][] =
     neighValue(correlationMatrix, numberOfNeighbours);
   const avgI: number = avgRow(matrix[i]);
@@ -36,7 +48,7 @@ export function solveByPearson(matrix: Array<Array<number | null>>,
 }
 
 export function calculatePearson(matrix: Array<Array<number | null>>,
-    i: number, j: number): Array<number | null> {
+    i: number): Array<number | null> {
   const correlationArray: Array<number | null> = [];
   const avgI: number = avgRow(matrix[i]);
   for (let k = 0; k < matrix.length; k++) {
@@ -56,6 +68,53 @@ export function calculatePearson(matrix: Array<Array<number | null>>,
       }
       correlationArray.push(numerator /
       (Math.sqrt(denominatorFirst) * Math.sqrt(denominatorSecond)));
+    } else {
+      correlationArray.push(null);
+    }
+  }
+  return correlationArray;
+}
+
+export function calculateCosine(matrix: Array<Array<number | null>>,
+    i: number): Array<number | null> {
+  const correlationArray: Array<number | null> = [];
+  for (let k = 0; k < matrix.length; k++) {
+    if (k !== i) {
+      let numerator: number = 0;
+      let denominatorFirst: number = 0;
+      let denominatorSecond: number = 0;
+      for (let l = 0; l < matrix[k].length; l++) {
+        if (typeof matrix[k][l] === 'number' &&
+            typeof matrix[i][l] === 'number') {
+          numerator += (matrix[k][l] as number) * (matrix[i][l] as number);
+          denominatorFirst += Math.pow((matrix[k][l] as number), 2);
+          denominatorSecond += Math.pow((matrix[i][l] as number), 2);
+        }
+      }
+      correlationArray.push(numerator /
+      (Math.sqrt(denominatorFirst) * Math.sqrt(denominatorSecond)));
+    } else {
+      correlationArray.push(null);
+    }
+  }
+  return correlationArray;
+}
+
+export function calculateEuclidean(matrix: Array<Array<number | null>>,
+    i: number): Array<number | null> {
+  const correlationArray: Array<number | null> = [];
+  const avgI: number = avgRow(matrix[i]);
+  for (let k = 0; k < matrix.length; k++) {
+    if (k !== i) {
+      const avgK: number = avgRow(matrix[k], matrix[i]);
+      let value: number = 0;
+      for (let l = 0; l < matrix[k].length; l++) {
+        if (typeof matrix[k][l] === 'number' &&
+            typeof matrix[i][l] === 'number') {
+          value += Math.pow((matrix[k][l] as number) - (matrix[i][l] as number), 2);
+        }
+      }
+      correlationArray.push(Math.sqrt(value));
     } else {
       correlationArray.push(null);
     }

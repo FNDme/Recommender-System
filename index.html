@@ -32,7 +32,23 @@
       </span>
     </div>
     <div id="response-block"></div>
-    <button class="button is-dark" type="submit" id="submit-btn" disabled>Submit</button>
+    <div class="submit-algorithm">
+      <div class="control">
+        <label class="radio">
+          <input type="radio" name="algorithm" value="Euclidean" checked>
+          Euclidean
+        </label>
+        <label class="radio">
+          <input type="radio" name="algorithm" value="Pearson">
+          Pearson
+        </label>
+        <label class="radio">
+          <input type="radio" name="algorithm" value="Cosine">
+          Cosine
+        </label>
+      </div>
+      <button class="button is-dark" type="submit" id="submit-btn" disabled>Submit</button>
+    </div>
     <div id="solution"></div>
     <div class="social-links">
       <a id="info-btn">

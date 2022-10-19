@@ -39,10 +39,17 @@ const enableBTN = [false, false]; // file - neighbours
         response.classList.add("shown");
         return;
     }
+    let algorithm = "Pearson";
+    for (const radio of document.getElementsByName("algorithm")) {
+        if (radio.checked) {
+            algorithm = radio.value;
+        }
+    }
+    console.log(algorithm);
     readMatrix(file).then((matrix) => {
         response.innerHTML = "";
         response.classList.remove("error");
-        const result = solve(matrix, parseInt(neighbours.value));
+        const result = solve(matrix, parseInt(neighbours.value), algorithm);
         resultDiv.classList.add("shown");
         if (result.length <= (screen.height / 45) / 3 && result[0].length <= (screen.width / 40) / 2) {
             if (resultDiv instanceof HTMLDivElement) {

@@ -1,4 +1,4 @@
-import { solve, matrixToString } from "./functions.js";
+import { solve, matrixToString, algorithm } from "./functions.js";
 
 const enableBTN = [false, false]; // file - neighbours
 
@@ -38,10 +38,16 @@ document.getElementById("submit-btn")?.addEventListener("click", function (event
     response.classList.add("shown");
     return;
   }
+  let algorithm: algorithm = "Pearson";
+  for (const radio of document.getElementsByName("algorithm")) {
+    if ((radio as HTMLInputElement).checked) {
+      algorithm = (radio as HTMLInputElement).value as algorithm;
+    }
+  }
   readMatrix(file).then((matrix) => {
     response.innerHTML = "";
     response.classList.remove("error");
-    const result: Array<Array<number | null>> = solve(matrix, parseInt(neighbours.value));
+    const result: Array<Array<number | null>> = solve(matrix, parseInt(neighbours.value), algorithm);
     resultDiv.classList.add("shown");
     if (result.length <= (screen.height/45)/3 && result[0].length <= (screen.width/40)/2) {
       if (resultDiv instanceof HTMLDivElement) {
