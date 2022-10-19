@@ -93,10 +93,8 @@ export function calculateCosine(matrix, i) {
 }
 export function calculateEuclidean(matrix, i) {
     const correlationArray = [];
-    const avgI = avgRow(matrix[i]);
     for (let k = 0; k < matrix.length; k++) {
         if (k !== i) {
-            const avgK = avgRow(matrix[k], matrix[i]);
             let value = 0;
             for (let l = 0; l < matrix[k].length; l++) {
                 if (typeof matrix[k][l] === 'number' &&

@@ -45,7 +45,6 @@ const enableBTN = [false, false]; // file - neighbours
             algorithm = radio.value;
         }
     }
-    console.log(algorithm);
     readMatrix(file).then((matrix) => {
         response.innerHTML = "";
         response.classList.remove("error");

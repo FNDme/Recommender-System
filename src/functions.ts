@@ -103,10 +103,8 @@ export function calculateCosine(matrix: Array<Array<number | null>>,
 export function calculateEuclidean(matrix: Array<Array<number | null>>,
     i: number): Array<number | null> {
   const correlationArray: Array<number | null> = [];
-  const avgI: number = avgRow(matrix[i]);
   for (let k = 0; k < matrix.length; k++) {
     if (k !== i) {
-      const avgK: number = avgRow(matrix[k], matrix[i]);
       let value: number = 0;
       for (let l = 0; l < matrix[k].length; l++) {
         if (typeof matrix[k][l] === 'number' &&
