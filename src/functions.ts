@@ -1,13 +1,14 @@
 export type algorithm = 'Pearson' | 'Cosine' | 'Euclidean';
 
-export function solve(matrix: Array<Array<number | null>>, neighbours: number, algorithm: algorithm = 'Pearson'):
+export function solve(matrix: Array<Array<number | null>>,
+    neighbours: number, algorithm: algorithm = 'Pearson'):
     Array<Array<number | null>> {
   const result: Array<Array<number | null>> = matrix;
   if (neighbours > matrix.length) {
-    throw new Error("Neighbours count is bigger than matrix rows");
+    throw new Error('Neighbours count is bigger than matrix rows');
   }
   if (neighbours < 1) {
-    throw new Error("Neighbours count is less than 1");
+    throw new Error('Neighbours count is less than 1');
   }
   for (let i = 0; i < matrix.length; i++) {
     for (let j = 0; j < matrix[i].length; j++) {
@@ -20,7 +21,8 @@ export function solve(matrix: Array<Array<number | null>>, neighbours: number, a
 }
 
 export function solveAlgorithm(matrix: Array<Array<number | null>>,
-    i: number, j: number, algorithm: algorithm, numberOfNeighbours: number): number {
+    i: number, j: number, algorithm: algorithm, numberOfNeighbours: number):
+    number {
   let correlationMatrix: Array<number | null>;
   switch (algorithm) {
     case 'Pearson':
@@ -109,7 +111,8 @@ export function calculateEuclidean(matrix: Array<Array<number | null>>,
       for (let l = 0; l < matrix[k].length; l++) {
         if (typeof matrix[k][l] === 'number' &&
             typeof matrix[i][l] === 'number') {
-          value += Math.pow((matrix[k][l] as number) - (matrix[i][l] as number), 2);
+          value += Math.pow((matrix[k][l] as number) -
+          (matrix[i][l] as number), 2);
         }
       }
       correlationArray.push(Math.sqrt(value));
@@ -120,7 +123,8 @@ export function calculateEuclidean(matrix: Array<Array<number | null>>,
   return correlationArray;
 }
 
-export function avgRow(row: Array<number | null>, baseRow: Array<number | null> = row): number {
+export function avgRow(row: Array<number | null>,
+    baseRow: Array<number | null> = row): number {
   let sum: number = 0;
   let nullCount: number = 0;
 
@@ -147,17 +151,18 @@ export function neighValue(values: Array<number | null>,
 }
 
 export function matrixToString(matrix: Array<Array<number | null>>): string {
-  let result = "";
+  let result = '';
   for (let i = 0; i < matrix.length; i++) {
     for (let j = 0; j < matrix[i].length; j++) {
-      const value = typeof matrix[i][j] === 'number' ? matrix[i][j] as number : '-.--';
+      const value = typeof matrix[i][j] === 'number' ?
+      matrix[i][j] as number : '-.--';
       result += typeof value === 'number' ? value.toFixed(2) : value;
       if (j !== matrix[i].length - 1) {
-        result += " ";
+        result += ' ';
       }
     }
     if (i !== matrix.length - 1) {
-      result += "\n";
+      result += '\n';
     }
   }
   return result;

@@ -1,10 +1,10 @@
 export function solve(matrix, neighbours, algorithm = 'Pearson') {
     const result = matrix;
     if (neighbours > matrix.length) {
-        throw new Error("Neighbours count is bigger than matrix rows");
+        throw new Error('Neighbours count is bigger than matrix rows');
     }
     if (neighbours < 1) {
-        throw new Error("Neighbours count is less than 1");
+        throw new Error('Neighbours count is less than 1');
     }
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[i].length; j++) {
@@ -99,7 +99,8 @@ export function calculateEuclidean(matrix, i) {
             for (let l = 0; l < matrix[k].length; l++) {
                 if (typeof matrix[k][l] === 'number' &&
                     typeof matrix[i][l] === 'number') {
-                    value += Math.pow(matrix[k][l] - matrix[i][l], 2);
+                    value += Math.pow(matrix[k][l] -
+                        matrix[i][l], 2);
                 }
             }
             correlationArray.push(Math.sqrt(value));
@@ -134,17 +135,18 @@ export function neighValue(values, neigh) {
     return result.slice(0, neigh);
 }
 export function matrixToString(matrix) {
-    let result = "";
+    let result = '';
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[i].length; j++) {
-            const value = typeof matrix[i][j] === 'number' ? matrix[i][j] : '-.--';
+            const value = typeof matrix[i][j] === 'number' ?
+                matrix[i][j] : '-.--';
             result += typeof value === 'number' ? value.toFixed(2) : value;
             if (j !== matrix[i].length - 1) {
-                result += " ";
+                result += ' ';
             }
         }
         if (i !== matrix.length - 1) {
-            result += "\n";
+            result += '\n';
         }
     }
     return result;
