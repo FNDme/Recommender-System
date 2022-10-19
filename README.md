@@ -1,6 +1,6 @@
 [![Tests](https://github.com/FNDme/Recommender-System/actions/workflows/test.js.yml/badge.svg?branch=main)](https://github.com/FNDme/Recommender-System/actions/workflows/test.js.yml)
 [![Coverage Status](https://coveralls.io/repos/github/FNDme/Recommender-System/badge.svg?branch=main)](https://coveralls.io/github/FNDme/Recommender-System?branch=main)
-
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=FNDme_Recommender-System&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=FNDme_Recommender-System)
 
 # Sistema de reomendación basado en filtrado colaborativo
 
