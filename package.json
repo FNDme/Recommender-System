@@ -13,7 +13,8 @@
     "coverage": "nyc npm test && nyc report --reporter=lcov"
   },
   "exclude": [
-    "./test"
+    "./test",
+    "./src/index.ts"
   ],
   "author": "",
   "license": "ISC",
