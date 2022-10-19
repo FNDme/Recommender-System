@@ -1,12 +1,3 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var _a, _b, _c, _d, _e;
 import { solve, matrixToString } from "./functions.js";
 const enableBTN = [false, false]; // file - neighbours
@@ -39,54 +30,56 @@ const enableBTN = [false, false]; // file - neighbours
     }
 });
 (_c = document.getElementById("submit-btn")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", function (event) {
-    if (event.target instanceof HTMLButtonElement) {
-        const file = document.getElementById("file-input");
-        const neighbours = document.getElementById("neighbours-input");
-        const resultDiv = document.getElementById("solution");
-        const response = document.getElementById("response-block");
-        if (file instanceof HTMLInputElement && neighbours instanceof HTMLInputElement) {
-            readMatrix(file).then((matrix) => {
-                response.innerHTML = "";
-                response.classList.remove("error");
-                const result = solve(matrix, parseInt(neighbours.value));
-                resultDiv.classList.add("shown");
-                if (result.length <= (screen.height / 45) / 4 && result[0].length <= (screen.width / 40) / 4) {
-                    if (resultDiv instanceof HTMLDivElement) {
-                        resultDiv.innerHTML = "";
-                        for (const line of result) {
-                            const row = document.createElement("div");
-                            if (row instanceof HTMLDivElement) {
-                                row.classList.add("row");
-                                for (const item of line) {
-                                    row.innerHTML += `<div class="cell">${item === null ? '-.--' : item === null || item === void 0 ? void 0 : item.toFixed(2)}</div>`;
-                                }
-                                resultDiv.appendChild(row);
-                            }
+    const file = document.getElementById("file-input");
+    const neighbours = document.getElementById("neighbours-input");
+    const resultDiv = document.getElementById("solution");
+    const response = document.getElementById("response-block");
+    if (!file.files || !neighbours.value) {
+        response.innerHTML = "Please, fill all the fields";
+        response.classList.add("shown");
+        return;
+    }
+    readMatrix(file).then((matrix) => {
+        response.innerHTML = "";
+        response.classList.remove("error");
+        const result = solve(matrix, parseInt(neighbours.value));
+        resultDiv.classList.add("shown");
+        if (result.length <= (screen.height / 45) / 4 && result[0].length <= (screen.width / 40) / 4) {
+            if (resultDiv instanceof HTMLDivElement) {
+                resultDiv.innerHTML = "";
+                for (const line of result) {
+                    const row = document.createElement("div");
+                    if (row instanceof HTMLDivElement) {
+                        row.classList.add("row");
+                        for (const item of line) {
+                            row.innerHTML += `<div class="cell">${item === null ? '-.--' : item === null || item === void 0 ? void 0 : item.toFixed(2)}</div>`;
                         }
+                        resultDiv.appendChild(row);
                     }
                 }
-                else {
-                    resultDiv.innerHTML = "Result is too big to display";
-                }
-                const link = resultDiv.appendChild(document.createElement("a"));
-                const btn = link.appendChild(document.createElement("button"));
-                btn.setAttribute("class", "button is-dark");
-                btn.setAttribute("id", "download-btn");
-                btn.innerHTML = "Download as .txt";
-                link.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(matrixToString(result)));
-                link.setAttribute("download", "result.txt");
-            }).catch((error) => {
-                if (response instanceof HTMLDivElement) {
-                    const githubLink = document.createElement("a");
-                    githubLink.setAttribute("href", "http://github.com/FNDme/recommender-system");
-                    githubLink.innerHTML = "GitHub";
-                    response.innerHTML = error + ": check " + githubLink.outerHTML + " for more info";
-                    response.classList.add("error");
-                    resultDiv.classList.remove("shown");
-                }
-            });
+            }
         }
-    }
+        else {
+            resultDiv.innerHTML = "Result is too big to display";
+        }
+        const link = resultDiv.appendChild(document.createElement("a"));
+        const btn = link.appendChild(document.createElement("button"));
+        btn.setAttribute("class", "button is-dark");
+        btn.setAttribute("id", "download-btn");
+        btn.innerHTML = "Download as .txt";
+        link.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(matrixToString(result)));
+        link.setAttribute("download", "result.txt");
+    }).catch((error) => {
+        if (response instanceof HTMLDivElement) {
+            const githubLink = document.createElement("a");
+            githubLink.setAttribute("href", "https://github.com/FNDme/recommender-system");
+            githubLink.innerHTML = "GitHub";
+            response.innerHTML = error + ": check " + githubLink.outerHTML + " for more info";
+            response.classList.add("error");
+            resultDiv.classList.remove("shown");
+            resultDiv.innerHTML = "";
+        }
+    });
 });
 (_d = document.getElementById("info-btn")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", function (event) {
     document.getElementsByClassName("popup")[0].classList.remove("hidden");
@@ -98,40 +91,44 @@ const enableBTN = [false, false]; // file - neighbours
 });
 // ----------------------------
 export function readMatrix(input) {
-    return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+    return new Promise((resolve, reject) => {
         var _a;
         const file = (_a = input.files) === null || _a === void 0 ? void 0 : _a.item(0);
-        const data = yield (file === null || file === void 0 ? void 0 : file.text());
-        let rows = [];
-        if (!data) {
-            reject("File is empty");
-        }
-        else {
-            rows = data.trim().split('\n');
-        }
-        if (rows.length < 2) {
-            reject("File must contain enough rows");
-        }
-        const result = [];
-        const rowSize = rows[0].trim().split(' ').length;
-        for (let i = 0; i < rows.length; i++) {
-            const cols = rows[i].trim().split(' ');
-            if (cols.length !== rowSize) {
-                reject("File does not contain a valid matrix");
+        file === null || file === void 0 ? void 0 : file.text().then((text) => {
+            const data = text;
+            let rows = [];
+            if (!data) {
+                reject("File is empty");
             }
-            result.push([]);
-            for (const col of cols) {
-                if (col === '-') {
-                    result[i].push(null);
-                    continue;
-                }
-                else if (isNaN(Number(col))) {
-                    reject("Invalid value in file");
-                }
-                result[i].push(parseInt(col, 10));
+            else {
+                rows = data.trim().split('\n');
             }
-        }
-        resolve(result);
-    }));
+            if (rows.length < 2) {
+                reject("File must contain enough rows");
+            }
+            const result = [];
+            const rowSize = rows[0].trim().split(' ').length;
+            for (let i = 0; i < rows.length; i++) {
+                const cols = rows[i].trim().split(' ');
+                if (cols.length !== rowSize) {
+                    reject("File does not contain a valid matrix");
+                }
+                result.push([]);
+                for (const col of cols) {
+                    if (col === '-') {
+                        result[i].push(null);
+                        continue;
+                    }
+                    else if (isNaN(Number(col))) {
+                        reject("Invalid value in file");
+                    }
+                    result[i].push(parseInt(col, 10));
+                }
+            }
+            resolve(result);
+        }).catch((error) => {
+            reject(error);
+        });
+    });
 }
 //# sourceMappingURL=index.js.map
