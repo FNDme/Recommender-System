@@ -98,11 +98,10 @@ export function readMatrix(input: HTMLInputElement): Promise<Array<Array<number 
     file?.text().then((text) => {
       const data = text;
       let rows: string[] = [];
-      if (!data) {
+      if (data === "") {
         reject("File is empty");
-      } else {
-        rows = data.trim().split('\n');
       }
+      rows = data.trim().split('\n');
       if (rows.length < 2) {
         reject("File must contain enough rows");
       }
