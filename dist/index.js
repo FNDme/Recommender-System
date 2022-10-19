@@ -112,10 +112,6 @@ export function readMatrix(input) {
                     reject("File does not contain a valid matrix");
                 }
                 result.push([]);
-                setValues(cols, i);
-            }
-            resolve(result);
-            function setValues(cols, i) {
                 for (const col of cols) {
                     if (col === '-') {
                         result[i].push(null);
@@ -124,6 +120,7 @@ export function readMatrix(input) {
                     isNaN(Number(col)) ? reject('Invalid value in file') : result[i].push(parseInt(col, 10));
                 }
             }
+            resolve(result);
         }).catch((error) => {
             reject(error);
         });

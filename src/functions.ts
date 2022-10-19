@@ -99,7 +99,8 @@ export function matrixToString(matrix: Array<Array<number | null>>): string {
   let result = "";
   for (let i = 0; i < matrix.length; i++) {
     for (let j = 0; j < matrix[i].length; j++) {
-      result += matrix[i][j] === null ? '-.--' : matrix[i][j]?.toFixed(2);
+      const value = typeof matrix[i][j] === 'number' ? matrix[i][j] as number : '-.--';
+      result += typeof value === 'number' ? value.toFixed(2) : value;
       if (j !== matrix[i].length - 1) {
         result += " ";
       }

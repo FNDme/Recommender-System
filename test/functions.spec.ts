@@ -119,7 +119,10 @@ describe('matrixToString', () => {
       [4, 3, 4, 3, null],
       [null, null, null, 5, 4],
       [1, 5, 5.08779, 2, 1]];
+    const test2 = [[null]];
     const result = matrixToString(test);
+    const result2 = matrixToString(test2);
+    expect(result2).to.be.a('string');
     expect(result).to.be.a('string');
     expect(result).to.be.equal(
       '5.00 3.00 4.00 4.00 4.87\n' +
@@ -127,6 +130,7 @@ describe('matrixToString', () => {
       '4.00 3.00 4.00 3.00 -.--\n' +
       '-.-- -.-- -.-- 5.00 4.00\n' +
       '1.00 5.00 5.09 2.00 1.00');
+    expect(result2).to.be.equal('-.--');
     expect(result).to.contain('4.87');
     expect(result).to.contain('-.--');
     expect(result).to.contain('\n');

@@ -86,11 +86,11 @@ export function neighValue(values, neigh) {
     return result;
 }
 export function matrixToString(matrix) {
-    var _a;
     let result = "";
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[i].length; j++) {
-            result += matrix[i][j] === null ? '-.--' : (_a = matrix[i][j]) === null || _a === void 0 ? void 0 : _a.toFixed(2);
+            const value = typeof matrix[i][j] === 'number' ? matrix[i][j] : '-.--';
+            result += typeof value === 'number' ? value.toFixed(2) : value;
             if (j !== matrix[i].length - 1) {
                 result += " ";
             }
