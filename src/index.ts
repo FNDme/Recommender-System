@@ -113,6 +113,11 @@ export function readMatrix(input: HTMLInputElement): Promise<Array<Array<number 
           reject("File does not contain a valid matrix");
         }
         result.push([]);
+        setValues(cols, i);
+      }
+      resolve(result);
+
+      function setValues(cols: string[], i: number) {
         for (const col of cols) {
           if (col === '-') {
             result[i].push(null);
@@ -121,7 +126,6 @@ export function readMatrix(input: HTMLInputElement): Promise<Array<Array<number 
           isNaN(Number(col)) ? reject('Invalid value in file') : result[i].push(parseInt(col, 10));
         }
       }
-      resolve(result);
     }).catch((error) => {
       reject(error);
     });
