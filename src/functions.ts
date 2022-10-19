@@ -79,20 +79,14 @@ export function avgRow(row: Array<number | null>, baseRow: Array<number | null> 
 
 export function neighValue(values: Array<number | null>,
     neigh: number): [number, number][] {
-  const result: [number, number][] = []; // [value, index]
-  for (let i = 0; i < neigh; i++) {
-    let max: number = -Infinity;
-    let maxIndex: number = -1;
-    for (let j = 0; j < values.length; j++) {
-      if (typeof values[j] === 'number' && values[j] as number > max) {
-        max = values[j] as number;
-        maxIndex = j;
-      }
+  const result: [number, number][] = [];
+  for (let i = 0; i < values.length; i++) {
+    if (values[i] !== null) {
+      result.push([values[i] as number, i]);
     }
-    result.push([max, maxIndex]);
-    values[maxIndex] = -Infinity;
   }
-  return result;
+  result.sort((a, b) => b[0] - a[0]);
+  return result.slice(0, neigh);
 }
 
 export function matrixToString(matrix: Array<Array<number | null>>): string {

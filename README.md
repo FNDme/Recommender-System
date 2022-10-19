@@ -16,7 +16,20 @@ Los sistemas de recomendación son una herramienta muy útil para las organizaci
 | Usuario 4 | 3 | 3 | 1 | 5 | 4 |
 | Usuario 5 | 1 | 5 | 5 | 2 | 1 |
 
-Por ejemplo, haciendo uso de la correlación de Pearson (ver [1]), se puede predecir que el usuario 1 valoraría el producto 5 con un 4.85.
+Por ejemplo, haciendo uso de la correlación de Pearson, se puede predecir que el usuario 1 valoraría el producto 5 con un 4.85.
 
 Sin embargo, la mayoría de los casos que se encuentran, no tienen un único elemento desconocido dentro de esta matriz, con lo que nuestro sistema ha sido modelado para resolver múltiples elementos desconocidos.
 
+## Formato de entrada
+El sistema de recomendación recibe como entrada un fichero de texto plano con el siguiente formato:
+
+```
+1 2 3 4 5
+1 5 3 4 4
+2 - 1 2 3
+3 4 3 4 3
+4 3 3 1 5
+5 1 5 5 2
+```
+
+En donde cada valor puede ser un número o un `-`. Los números representan la valoración que un usuario ha dado a un producto, mientras que los guiones representan que el usuario no ha valorado el producto. En este caso, el sistema de recomendación debería predecir la valoración que el usuario 3 daría al producto 3.

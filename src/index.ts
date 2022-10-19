@@ -43,7 +43,7 @@ document.getElementById("submit-btn")?.addEventListener("click", function (event
     response.classList.remove("error");
     const result: Array<Array<number | null>> = solve(matrix, parseInt(neighbours.value));
     resultDiv.classList.add("shown");
-    if (result.length <= (screen.height/45)/4 && result[0].length <= (screen.width/40)/4) {
+    if (result.length <= (screen.height/45)/3 && result[0].length <= (screen.width/40)/2) {
       if (resultDiv instanceof HTMLDivElement) {
         resultDiv.innerHTML = "";
         for (const line of result) {
