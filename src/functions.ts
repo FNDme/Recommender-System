@@ -1,6 +1,12 @@
 export function solve(matrix: Array<Array<number | null>>, neighbours: number):
     Array<Array<number | null>> {
   const result: Array<Array<number | null>> = matrix;
+  if (neighbours > matrix.length) {
+    throw new Error("Neighbours count is bigger than matrix rows");
+  }
+  if (neighbours < 1) {
+    throw new Error("Neighbours count is less than 1");
+  }
   for (let i = 0; i < matrix.length; i++) {
     for (let j = 0; j < matrix[i].length; j++) {
       if (matrix[i][j] === null) {

@@ -89,6 +89,26 @@ describe('solve', () => {
     expect(result[4][1]).to.be.a('number');
     expect((result[4][1] as number).toFixed(2)).to.be.equal('3.04');
   });
+
+  it('should throw an error if neighbours value is greater than the number of rows', () => {
+    const test = [
+      [5, 3, 4, 4, null],
+      [3, 1, 2, 3, 3],
+      [4, 3, 4, null, 5],
+      [3, 3, 1, 5, 4],
+      [1, null, 5, 2, 1]];
+    expect(() => solve(test, 6)).to.throw('Neighbours count is bigger than matrix rows');
+  });
+
+  it('should throw an error if neighbours value is less than 1', () => {
+    const test = [
+      [5, 3, 4, 4, null],
+      [3, 1, 2, 3, 3],
+      [4, 3, 4, null, 5],
+      [3, 3, 1, 5, 4],
+      [1, null, 5, 2, 1]];
+    expect(() => solve(test, 0)).to.throw('Neighbours count is less than 1');
+  });
 });
 
 describe('matrixToString', () => {

@@ -50,7 +50,8 @@ const enableBTN = [false, false]; // file - neighbours
                 response.classList.remove("error");
                 const result = solve(matrix, parseInt(neighbours.value));
                 resultDiv.classList.add("shown");
-                if (result.length <= 15 && result[0].length <= 15) {
+                console.log(screen.height, screen.height / 45 / 4, screen.width, screen.width / 40 / 4);
+                if (result.length <= (screen.height / 45) / 4 && result[0].length <= (screen.width / 40) / 4) {
                     if (resultDiv instanceof HTMLDivElement) {
                         resultDiv.innerHTML = "";
                         for (const line of result) {
@@ -89,7 +90,6 @@ const enableBTN = [false, false]; // file - neighbours
     }
 });
 (_d = document.getElementById("info-btn")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", function (event) {
-    console.log(document.getElementsByClassName("popup")[0]);
     document.getElementsByClassName("popup")[0].classList.remove("hidden");
     document.getElementsByClassName("popup")[0].classList.add("shown");
 });
@@ -127,7 +127,6 @@ export function readMatrix(input) {
                     result[i].push(parseInt(col, 10));
                 }
             }
-            console.log(result);
             resolve(result);
         }
         reject("File is empty");

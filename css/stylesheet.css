@@ -54,6 +54,7 @@ h1 {
   text-align: center;
   letter-spacing: 0.1rem;
   height: 40px;
+  width: 158px;
   display: flex;
   align-items: center;
   padding: 7px 16px;
@@ -78,6 +79,12 @@ h1 {
   min-width: 3em;
   max-width: fit-content;
   border-radius: 4px;
+  margin-right: 1.3em;
+}
+
+.number-input > input:hover {
+  outline: none;
+  background-color: #b1b1b1;
 }
 
 .number-input > input::-webkit-outer-spin-button,
@@ -151,8 +158,12 @@ h1 {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.popup.hidden {
+.hidden {
   display: none;
+}
+
+.shown {
+  display: block;
 }
 
 .popup.shown {
@@ -167,6 +178,7 @@ h1 {
   background-color: #DCDCDC;
   padding: 2em;
   border-radius: 10px;
+  max-width: 80%;
 }
 
 .popup > .info > * {
