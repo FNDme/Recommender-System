@@ -105,25 +105,28 @@ export function readMatrix(input) {
                 reject("File must contain enough rows");
             }
             const result = [];
-            const rowSize = rows[0].trim().split(' ').length;
-            for (let i = 0; i < rows.length; i++) {
-                const cols = rows[i].trim().split(' ');
-                if (cols.length !== rowSize) {
-                    reject("File does not contain a valid matrix");
-                }
-                result.push([]);
-                for (const col of cols) {
-                    if (col === '-') {
-                        result[i].push(null);
-                        continue;
-                    }
-                    isNaN(Number(col)) ? reject('Invalid value in file') : result[i].push(parseInt(col, 10));
-                }
-            }
+            translateToMatrix(rows, reject, result);
             resolve(result);
         }).catch((error) => {
             reject(error);
         });
     });
+}
+function translateToMatrix(rows, reject, result) {
+    const rowSize = rows[0].trim().split(' ').length;
+    for (let i = 0; i < rows.length; i++) {
+        const cols = rows[i].trim().split(' ');
+        if (cols.length !== rowSize) {
+            reject("File does not contain a valid matrix");
+        }
+        result.push([]);
+        for (const col of cols) {
+            if (col === '-') {
+                result[i].push(null);
+                continue;
+            }
+            isNaN(Number(col)) ? reject('Invalid value in file') : result[i].push(parseInt(col, 10));
+        }
+    }
 }
 //# sourceMappingURL=index.js.map

@@ -79,20 +79,6 @@ export function neighValue(values, neigh) {
     result.sort((a, b) => b[0] - a[0]);
     return result.slice(0, neigh);
 }
-// const result: [number, number][] = []; // [value, index]
-// for (let i = 0; i < neigh; i++) {
-//   let max: number = -Infinity;
-//   let maxIndex: number = -1;
-//   for (let j = 0; j < values.length; j++) {
-//     if (typeof values[j] === 'number' && values[j] as number > max) {
-//       max = values[j] as number;
-//       maxIndex = j;
-//     }
-//   }
-//   result.push([max, maxIndex]);
-//   values[maxIndex] = -Infinity;
-// }
-// return result;
 export function matrixToString(matrix) {
     let result = "";
     for (let i = 0; i < matrix.length; i++) {

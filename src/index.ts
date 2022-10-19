@@ -106,24 +106,28 @@ export function readMatrix(input: HTMLInputElement): Promise<Array<Array<number 
         reject("File must contain enough rows");
       }
       const result: Array<Array<number | null>> = [];
-      const rowSize = rows[0].trim().split(' ').length;
-      for (let i = 0; i < rows.length; i++) {
-        const cols: string[] = rows[i].trim().split(' ');
-        if (cols.length !== rowSize) {
-          reject("File does not contain a valid matrix");
-        }
-        result.push([]);
-        for (const col of cols) {
-          if (col === '-') {
-            result[i].push(null);
-            continue;
-          }
-          isNaN(Number(col)) ? reject('Invalid value in file') : result[i].push(parseInt(col, 10));
-        }
-      }
+      translateToMatrix(rows, reject, result);
       resolve(result);
     }).catch((error) => {
       reject(error);
     });
   });
+}
+
+function translateToMatrix(rows: string[], reject: (reason?: any) => void, result: (number | null)[][]) {
+  const rowSize = rows[0].trim().split(' ').length;
+  for (let i = 0; i < rows.length; i++) {
+    const cols: string[] = rows[i].trim().split(' ');
+    if (cols.length !== rowSize) {
+      reject("File does not contain a valid matrix");
+    }
+    result.push([]);
+    for (const col of cols) {
+      if (col === '-') {
+        result[i].push(null);
+        continue;
+      }
+      isNaN(Number(col)) ? reject('Invalid value in file') : result[i].push(parseInt(col, 10));
+    }
+  }
 }
