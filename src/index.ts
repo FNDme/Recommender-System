@@ -40,7 +40,6 @@ document.getElementById("submit-btn")?.addEventListener("click", function (event
         response.classList.remove("error");
         const result: Array<Array<number | null>> = solve(matrix, parseInt(neighbours.value));
         resultDiv.classList.add("shown");
-        console.log(screen.height, screen.height / 45 / 4, screen.width, screen.width / 40 / 4);
         if (result.length <= (screen.height/45)/4 && result[0].length <= (screen.width/40)/4) {
           if (resultDiv instanceof HTMLDivElement) {
             resultDiv.innerHTML = "";
@@ -95,31 +94,33 @@ export function readMatrix(input: HTMLInputElement): Promise<Array<Array<number 
   return new Promise(async (resolve, reject) => {
     const file = input.files?.item(0);
     const data = await file?.text();
-    if (data) {
-      const rows: string[] = data.trim().split('\n');
-      if (rows.length < 2) {
-        reject("File must contain enough rows");
-      }
-      const result: Array<Array<number | null>> = [];
-      const rowSize = rows[0].trim().split(' ').length;
-      for (let i = 0; i < rows.length; i++) {
-        const cols: string[] = rows[i].trim().split(' ');
-        if (cols.length !== rowSize) {
-          reject("File does not contain a valid matrix");
-        }
-        result.push([]);
-        for (const col of cols) {
-          if (col === '-') {
-            result[i].push(null);
-            continue;
-          } else if (isNaN(Number(col))) {
-            reject("Invalid value in file");
-          }
-          result[i].push(parseInt(col, 10));
-        }
-      }
-      resolve(result);
+    let rows: string[] = [];
+    if (!data) {
+      reject("File is empty");
+    } else {
+      rows = data.trim().split('\n');
     }
-    reject("File is empty");
+    if (rows.length < 2) {
+      reject("File must contain enough rows");
+    }
+    const result: Array<Array<number | null>> = [];
+    const rowSize = rows[0].trim().split(' ').length;
+    for (let i = 0; i < rows.length; i++) {
+      const cols: string[] = rows[i].trim().split(' ');
+      if (cols.length !== rowSize) {
+        reject("File does not contain a valid matrix");
+      }
+      result.push([]);
+      for (const col of cols) {
+        if (col === '-') {
+          result[i].push(null);
+          continue;
+        } else if (isNaN(Number(col))) {
+          reject("Invalid value in file");
+        }
+        result[i].push(parseInt(col, 10));
+      }
+    }
+    resolve(result);
   });
 }

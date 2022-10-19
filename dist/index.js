@@ -50,7 +50,6 @@ const enableBTN = [false, false]; // file - neighbours
                 response.classList.remove("error");
                 const result = solve(matrix, parseInt(neighbours.value));
                 resultDiv.classList.add("shown");
-                console.log(screen.height, screen.height / 45 / 4, screen.width, screen.width / 40 / 4);
                 if (result.length <= (screen.height / 45) / 4 && result[0].length <= (screen.width / 40) / 4) {
                     if (resultDiv instanceof HTMLDivElement) {
                         resultDiv.innerHTML = "";
@@ -103,33 +102,36 @@ export function readMatrix(input) {
         var _a;
         const file = (_a = input.files) === null || _a === void 0 ? void 0 : _a.item(0);
         const data = yield (file === null || file === void 0 ? void 0 : file.text());
-        if (data) {
-            const rows = data.trim().split('\n');
-            if (rows.length < 2) {
-                reject("File must contain enough rows");
-            }
-            const result = [];
-            const rowSize = rows[0].trim().split(' ').length;
-            for (let i = 0; i < rows.length; i++) {
-                const cols = rows[i].trim().split(' ');
-                if (cols.length !== rowSize) {
-                    reject("File does not contain a valid matrix");
-                }
-                result.push([]);
-                for (const col of cols) {
-                    if (col === '-') {
-                        result[i].push(null);
-                        continue;
-                    }
-                    else if (isNaN(Number(col))) {
-                        reject("Invalid value in file");
-                    }
-                    result[i].push(parseInt(col, 10));
-                }
-            }
-            resolve(result);
+        let rows = [];
+        if (!data) {
+            reject("File is empty");
         }
-        reject("File is empty");
+        else {
+            rows = data.trim().split('\n');
+        }
+        if (rows.length < 2) {
+            reject("File must contain enough rows");
+        }
+        const result = [];
+        const rowSize = rows[0].trim().split(' ').length;
+        for (let i = 0; i < rows.length; i++) {
+            const cols = rows[i].trim().split(' ');
+            if (cols.length !== rowSize) {
+                reject("File does not contain a valid matrix");
+            }
+            result.push([]);
+            for (const col of cols) {
+                if (col === '-') {
+                    result[i].push(null);
+                    continue;
+                }
+                else if (isNaN(Number(col))) {
+                    reject("Invalid value in file");
+                }
+                result[i].push(parseInt(col, 10));
+            }
+        }
+        resolve(result);
     }));
 }
 //# sourceMappingURL=index.js.map
