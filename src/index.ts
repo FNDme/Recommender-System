@@ -117,10 +117,8 @@ export function readMatrix(input: HTMLInputElement): Promise<Array<Array<number 
           if (col === '-') {
             result[i].push(null);
             continue;
-          } else if (isNaN(Number(col))) {
-            reject("Invalid value in file");
           }
-          result[i].push(parseInt(col, 10));
+          isNaN(Number(col)) ? reject('Invalid value in file') : result[i].push(parseInt(col, 10));
         }
       }
       resolve(result);

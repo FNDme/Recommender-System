@@ -97,12 +97,10 @@ export function readMatrix(input) {
         file === null || file === void 0 ? void 0 : file.text().then((text) => {
             const data = text;
             let rows = [];
-            if (!data) {
+            if (data === "") {
                 reject("File is empty");
             }
-            else {
-                rows = data.trim().split('\n');
-            }
+            rows = data.trim().split('\n');
             if (rows.length < 2) {
                 reject("File must contain enough rows");
             }
@@ -119,10 +117,7 @@ export function readMatrix(input) {
                         result[i].push(null);
                         continue;
                     }
-                    else if (isNaN(Number(col))) {
-                        reject("Invalid value in file");
-                    }
-                    result[i].push(parseInt(col, 10));
+                    isNaN(Number(col)) ? reject('Invalid value in file') : result[i].push(parseInt(col, 10));
                 }
             }
             resolve(result);
