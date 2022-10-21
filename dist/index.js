@@ -2,6 +2,7 @@ var _a, _b, _c, _d, _e;
 import { solve, matrixToString } from './functions.js';
 const enableBTN = [false, false]; // file - neighbours
 let matrix;
+const nullValues = [];
 (_a = document.getElementById('file-input')) === null || _a === void 0 ? void 0 : _a.addEventListener('change', function (event) {
     if (event.target instanceof HTMLInputElement) {
         const response = document.getElementById('response-block');
@@ -9,6 +10,13 @@ let matrix;
         readMatrix(document.getElementById('file-input')).then((matrixMLoaded) => {
             var _a, _b, _c;
             matrix = matrixMLoaded;
+            for (let i = 0; i < matrix.length; i++) {
+                for (let j = 0; j < matrix[i].length; j++) {
+                    if (matrix[i][j] === null) {
+                        nullValues.push([i, j]);
+                    }
+                }
+            }
             enableBTN[0] = true;
             if (enableBTN[0] && enableBTN[1]) {
                 (_a = document.getElementById('submit-btn')) === null || _a === void 0 ? void 0 : _a.removeAttribute('disabled');
@@ -47,7 +55,7 @@ let matrix;
     }
 });
 (_c = document.getElementById('submit-btn')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', function (event) {
-    var _a;
+    var _a, _b;
     const file = document.getElementById('file-input');
     const neighbours = document.getElementById('neighbours-input');
     const resultDiv = document.getElementById('solution');
@@ -67,7 +75,6 @@ let matrix;
     response.classList.remove('error');
     const solution = solve(matrix, parseInt(neighbours.value), algorithm);
     const result = solution[0];
-    console.log(matrixToString(result));
     const correlation = solution[1];
     resultDiv.classList.add('shown');
     if (result.length <= (screen.height / 45) / 3 && result[0].length <=
@@ -91,14 +98,20 @@ let matrix;
             }
             resultTable.appendChild(corr);
             const sol = document.createElement('div');
-            console.log(matrixToString(matrix));
             for (let i = 0; i < result.length; i++) {
                 const row = document.createElement('div');
                 if (row instanceof HTMLDivElement) {
                     row.classList.add('row');
                     for (let j = 0; j < result[i].length; j++) {
-                        row.innerHTML += `<div class="cell">${result[i][j] === null ?
-                            '-.--' : (_a = result[i][j]) === null || _a === void 0 ? void 0 : _a.toFixed(2)}</div>`;
+                        if (nullValues.includes([i, j])) {
+                            row.innerHTML +=
+                                `<div class="cell objective">${result[i][j] === null ?
+                                    '-.--' : (_a = result[i][j]) === null || _a === void 0 ? void 0 : _a.toFixed(2)}</div>`;
+                        }
+                        else {
+                            row.innerHTML += `<div class="cell">${result[i][j] === null ?
+                                '-.--' : (_b = result[i][j]) === null || _b === void 0 ? void 0 : _b.toFixed(2)}</div>`;
+                        }
                     }
                     sol.appendChild(row);
                 }
