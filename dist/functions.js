@@ -9,26 +9,54 @@ export function solve(matrix, neighbours, algorithm = 'Pearson') {
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[i].length; j++) {
             if (matrix[i][j] === null) {
-                result[i][j] = solveAlgorithm(matrix, i, j, algorithm, neighbours);
+                result[i][j] =
+                    solveAlgorithm(matrix, i, j, algorithm, neighbours);
             }
         }
     }
-    return result;
+    return [result, calculateCorrelations(matrix, algorithm)];
+}
+export function calculateCorrelations(matrix, algorithm) {
+    const correlationMatrix = [];
+    for (let i = 0; i < matrix.length; i++) {
+        correlationMatrix[i] = [];
+        for (let j = 0; j < matrix.length; j++) {
+            correlationMatrix[i][j] = null;
+        }
+    }
+    for (let i = 0; i < matrix.length; i++) {
+        let row = [];
+        switch (algorithm) {
+            case 'Euclidean':
+                row = calculateEuclidean(matrix, i);
+                break;
+            case 'Cosine':
+                row = calculateCosine(matrix, i);
+                break;
+            case 'Pearson':
+                row = calculatePearson(matrix, i);
+                break;
+        }
+        for (let j = 0; j < row.length; j++) {
+            correlationMatrix[i][j] = row[j];
+        }
+    }
+    return correlationMatrix;
 }
 export function solveAlgorithm(matrix, i, j, algorithm, numberOfNeighbours) {
-    let correlationMatrix;
+    let correlationArray;
     switch (algorithm) {
         case 'Pearson':
-            correlationMatrix = calculatePearson(matrix, i);
+            correlationArray = calculatePearson(matrix, i);
             break;
         case 'Cosine':
-            correlationMatrix = calculateCosine(matrix, i);
+            correlationArray = calculateCosine(matrix, i);
             break;
         case 'Euclidean':
-            correlationMatrix = calculateEuclidean(matrix, i);
+            correlationArray = calculateEuclidean(matrix, i);
             break;
     }
-    const neighbours = neighValue(correlationMatrix, numberOfNeighbours);
+    const neighbours = neighValue(correlationArray, numberOfNeighbours);
     const avgI = avgRow(matrix[i]);
     let numerator = 0;
     let denominator = 0;

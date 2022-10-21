@@ -2,7 +2,7 @@ export type algorithm = 'Pearson' | 'Cosine' | 'Euclidean';
 
 export function solve(matrix: Array<Array<number | null>>,
     neighbours: number, algorithm: algorithm = 'Pearson'):
-    Array<Array<number | null>> {
+    [Array<Array<number | null>>, Array<Array<number | null>>] {
   const result: Array<Array<number | null>> = matrix;
   if (neighbours > matrix.length) {
     throw new Error('Neighbours count is bigger than matrix rows');
@@ -13,30 +13,60 @@ export function solve(matrix: Array<Array<number | null>>,
   for (let i = 0; i < matrix.length; i++) {
     for (let j = 0; j < matrix[i].length; j++) {
       if (matrix[i][j] === null) {
-        result[i][j] = solveAlgorithm(matrix, i, j, algorithm, neighbours);
+        result[i][j] =
+          solveAlgorithm(matrix, i, j, algorithm, neighbours);
       }
     }
   }
-  return result;
+  return [result, calculateCorrelations(matrix, algorithm)];
+}
+
+export function calculateCorrelations(matrix: Array<Array<number | null>>,
+    algorithm: algorithm): Array<Array<number | null>> {
+  const correlationMatrix: Array<Array<number | null>> = [];
+  for (let i = 0; i < matrix.length; i++) {
+    correlationMatrix[i] = [];
+    for (let j = 0; j < matrix.length; j++) {
+      correlationMatrix[i][j] = null;
+    }
+  }
+  for (let i = 0; i < matrix.length; i++) {
+    let row: Array<number | null> = [];
+    switch (algorithm) {
+      case 'Euclidean':
+        row = calculateEuclidean(matrix, i);
+        break;
+      case 'Cosine':
+        row = calculateCosine(matrix, i);
+        break;
+      case 'Pearson':
+        row = calculatePearson(matrix, i);
+        break;
+    }
+    for (let j = 0; j < row.length; j++) {
+      correlationMatrix[i][j] = row[j];
+    }
+  }
+  return correlationMatrix;
 }
 
 export function solveAlgorithm(matrix: Array<Array<number | null>>,
     i: number, j: number, algorithm: algorithm, numberOfNeighbours: number):
     number {
-  let correlationMatrix: Array<number | null>;
+  let correlationArray: Array<number | null>;
   switch (algorithm) {
     case 'Pearson':
-      correlationMatrix = calculatePearson(matrix, i);
+      correlationArray = calculatePearson(matrix, i);
       break;
     case 'Cosine':
-      correlationMatrix = calculateCosine(matrix, i);
+      correlationArray = calculateCosine(matrix, i);
       break;
     case 'Euclidean':
-      correlationMatrix = calculateEuclidean(matrix, i);
+      correlationArray = calculateEuclidean(matrix, i);
       break;
   }
   const neighbours: [number, number][] =
-    neighValue(correlationMatrix, numberOfNeighbours);
+    neighValue(correlationArray, numberOfNeighbours);
   const avgI: number = avgRow(matrix[i]);
   let numerator: number = 0;
   let denominator: number = 0;

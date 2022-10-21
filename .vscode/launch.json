@@ -11,14 +11,10 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/src/index.ts",
+      "program": "${workspaceFolder}/src/functions.ts",
       "preLaunchTask": "tsc: build - tsconfig.json",
       "outFiles": [
         "${workspaceFolder}/dist/**/*.js"
-      ],
-      "args": [
-        "${workspaceFolder}/examples/test-01.txt",
-        "2"
       ]
     }
   ]

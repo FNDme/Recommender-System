@@ -1,5 +1,9 @@
 export declare type algorithm = 'Pearson' | 'Cosine' | 'Euclidean';
-export declare function solve(matrix: Array<Array<number | null>>, neighbours: number, algorithm?: algorithm): Array<Array<number | null>>;
+export declare function solve(matrix: Array<Array<number | null>>, neighbours: number, algorithm?: algorithm): [
+    Array<Array<number | null>>,
+    Array<Array<number | null>>
+];
+export declare function calculateCorrelations(matrix: Array<Array<number | null>>, algorithm: algorithm): Array<Array<number | null>>;
 export declare function solveAlgorithm(matrix: Array<Array<number | null>>, i: number, j: number, algorithm: algorithm, numberOfNeighbours: number): number;
 export declare function calculatePearson(matrix: Array<Array<number | null>>, i: number): Array<number | null>;
 export declare function calculateCosine(matrix: Array<Array<number | null>>, i: number): Array<number | null>;

@@ -74,14 +74,21 @@ document.getElementById('submit-btn')?.addEventListener('click',
       }
       response.innerHTML = '';
       response.classList.remove('error');
-      const result: Array<Array<number | null>> = solve(matrix,
+      const solution = solve(matrix,
           parseInt(neighbours.value), algorithm);
+      const result = solution[0];
+      console.log(matrixToString(result));
+      const correlation = solution[1];
       resultDiv.classList.add('shown');
       if (result.length <= (screen.height/45)/3 && result[0].length <=
-          (screen.width/40)/2) {
+          (screen.width/40)/2.5) {
         if (resultDiv instanceof HTMLDivElement) {
           resultDiv.innerHTML = '';
-          for (const line of result) {
+          const resultTable = resultDiv.appendChild(document.
+              createElement('div'));
+          resultTable.classList.add('result-table');
+          const corr = document.createElement('div');
+          for (const line of correlation) {
             const row = document.createElement('div');
             if (row instanceof HTMLDivElement) {
               row.classList.add('row');
@@ -89,9 +96,23 @@ document.getElementById('submit-btn')?.addEventListener('click',
                 row.innerHTML += `<div class="cell">${item === null ?
                   '-.--' : item?.toFixed(2)}</div>`;
               }
-              resultDiv.appendChild(row);
+              corr.appendChild(row);
             }
           }
+          resultTable.appendChild(corr);
+          const sol = document.createElement('div');
+          for (let i = 0; i < result.length; i++) {
+            const row = document.createElement('div');
+            if (row instanceof HTMLDivElement) {
+              row.classList.add('row');
+              for (let j = 0; j < result[i].length; j++) {
+                row.innerHTML += `<div class="cell">${result[i][j] === null ?
+                  '-.--' : result[i][j]?.toFixed(2)}</div>`;
+              }
+              sol.appendChild(row);
+            }
+          }
+          resultTable.appendChild(sol);
         }
       } else {
         resultDiv.innerHTML = 'Result is too big to display';
@@ -102,7 +123,8 @@ document.getElementById('submit-btn')?.addEventListener('click',
       btn.setAttribute('id', 'download-btn');
       btn.innerHTML = 'Download as .txt';
       link.setAttribute('href', 'data:text/plain;charset=utf-8,' +
-      encodeURIComponent(matrixToString(result)));
+      encodeURIComponent('Result\n' + matrixToString(result)) +
+          '\n\nCorrelation\n' + matrixToString(correlation));
       link.setAttribute('download', 'result.txt');
     });
 
