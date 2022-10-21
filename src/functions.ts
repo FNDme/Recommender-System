@@ -3,7 +3,7 @@ export type algorithm = 'Pearson' | 'Cosine' | 'Euclidean';
 export function solve(matrix: Array<Array<number | null>>,
     neighbours: number, algorithm: algorithm = 'Pearson'):
     [Array<Array<number | null>>, Array<Array<number | null>>] {
-  const result: Array<Array<number | null>> = matrix;
+  const result = structuredClone(matrix);
   if (neighbours > matrix.length) {
     throw new Error('Neighbours count is bigger than matrix rows');
   }
@@ -197,3 +197,10 @@ export function matrixToString(matrix: Array<Array<number | null>>): string {
   }
   return result;
 }
+
+const test = [
+  [1, 2, 3],
+  [2, null, 4]];
+
+console.log(matrixToString(solve(test, 2, 'Pearson')[0]));
+console.log(matrixToString(test));

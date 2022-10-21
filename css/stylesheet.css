@@ -129,7 +129,8 @@ h1 {
 }
 
 .cell.objective {
-  background-color: #bbb;
+  background-color: #5e5e5e;
+  border-radius: 4px;
 }
 
 #solution > .result-table > * > * {
@@ -243,7 +244,7 @@ div.submit-algorithm {
   align-items: center;
 }
 
-div.submit-algorithm > div.control {
+div.submit-algorithm > form.control {
   margin: 0.5em;
   margin-right: 2em;
   width: 140px;
@@ -255,12 +256,12 @@ div.submit-algorithm > div.control {
   align-items: flex-start
 }
 
-div.submit-algorithm > div.control > label {
+div.submit-algorithm > form.control > label {
   color: #DCDCDC;
   margin-left: 8px;
 }
 
-div.submit-algorithm > div.control input {
+div.submit-algorithm > form.control input {
   margin-left: 1em;
   margin-right: 0.3em;
   appearance: none;
@@ -272,6 +273,6 @@ div.submit-algorithm > div.control input {
   padding: 3px;
 }
 
-div.submit-algorithm > div.control input:checked {
+div.submit-algorithm > form.control input:checked {
   background-color: #282828;
 }

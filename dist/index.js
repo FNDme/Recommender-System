@@ -65,12 +65,10 @@ const nullValues = [];
         response.classList.add('shown');
         return;
     }
-    let algorithm = 'Pearson';
-    for (const radio of document.getElementsByName('algorithm')) {
-        if (radio.checked) {
-            algorithm = radio.value;
-        }
-    }
+    const form = document.forms.namedItem('form');
+    const radios = form.elements.namedItem('algorithm');
+    const algorithm = radios.value;
+    console.log(algorithm);
     response.innerHTML = '';
     response.classList.remove('error');
     const solution = solve(matrix, parseInt(neighbours.value), algorithm);
@@ -91,7 +89,7 @@ const nullValues = [];
                     row.classList.add('row');
                     for (const item of line) {
                         row.innerHTML += `<div class="cell">${item === null ?
-                            '-.--' : item === null || item === void 0 ? void 0 : item.toFixed(2)}</div>`;
+                            '\\' : item === null || item === void 0 ? void 0 : item.toFixed(2)}</div>`;
                     }
                     corr.appendChild(row);
                 }
@@ -103,7 +101,8 @@ const nullValues = [];
                 if (row instanceof HTMLDivElement) {
                     row.classList.add('row');
                     for (let j = 0; j < result[i].length; j++) {
-                        if (nullValues.includes([i, j])) {
+                        if (nullValues.some((value) => value[0] === i &&
+                            value[1] === j)) {
                             row.innerHTML +=
                                 `<div class="cell objective">${result[i][j] === null ?
                                     '-.--' : (_a = result[i][j]) === null || _a === void 0 ? void 0 : _a.toFixed(2)}</div>`;

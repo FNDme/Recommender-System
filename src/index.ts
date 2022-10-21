@@ -74,12 +74,10 @@ document.getElementById('submit-btn')?.addEventListener('click',
         response.classList.add('shown');
         return;
       }
-      let algorithm: algorithm = 'Pearson';
-      for (const radio of document.getElementsByName('algorithm')) {
-        if ((radio as HTMLInputElement).checked) {
-          algorithm = (radio as HTMLInputElement).value as algorithm;
-        }
-      }
+      const form = document.forms.namedItem('form') as HTMLFormElement;
+      const radios = form.elements.namedItem('algorithm') as RadioNodeList;
+      const algorithm = radios.value as algorithm;
+      console.log(algorithm);
       response.innerHTML = '';
       response.classList.remove('error');
       const solution = solve(matrix,
@@ -101,7 +99,7 @@ document.getElementById('submit-btn')?.addEventListener('click',
               row.classList.add('row');
               for (const item of line) {
                 row.innerHTML += `<div class="cell">${item === null ?
-                  '-.--' : item?.toFixed(2)}</div>`;
+                  '\\' : item?.toFixed(2)}</div>`;
               }
               corr.appendChild(row);
             }
@@ -113,7 +111,8 @@ document.getElementById('submit-btn')?.addEventListener('click',
             if (row instanceof HTMLDivElement) {
               row.classList.add('row');
               for (let j = 0; j < result[i].length; j++) {
-                if (nullValues.includes([i, j])) {
+                if (nullValues.some((value) => value[0] === i &&
+                   value[1] === j)) {
                   row.innerHTML +=
                   `<div class="cell objective">${result[i][j] === null ?
                     '-.--' : result[i][j]?.toFixed(2)}</div>`;
