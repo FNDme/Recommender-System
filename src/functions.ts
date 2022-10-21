@@ -197,10 +197,3 @@ export function matrixToString(matrix: Array<Array<number | null>>): string {
   }
   return result;
 }
-
-const test = [
-  [1, 2, 3],
-  [2, null, 4]];
-
-console.log(matrixToString(solve(test, 2, 'Pearson')[0]));
-console.log(matrixToString(test));
