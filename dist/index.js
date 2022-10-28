@@ -1,7 +1,21 @@
+/**
+ * @title index.ts
+ * @description It is the entry point for the application.
+ * @content It reads the file and translates it into a matrix.
+ */
 var _a, _b, _c, _d, _e;
 import { solve, matrixToString } from './functions.js';
-const enableBTN = [false, false]; // file - neighbours
+/**
+ * @variable enableBTN Button to enable
+ */
+const enableBTN = [false, false]; // file - neighbors
+/**
+ * @variable matrix Matrix to fill
+ */
 let matrix;
+/**
+ * @variable nullValues Count of null values in matrix
+ */
 const nullValues = [];
 (_a = document.getElementById('file-input')) === null || _a === void 0 ? void 0 : _a.addEventListener('change', function (event) {
     if (event.target instanceof HTMLInputElement) {
@@ -40,7 +54,7 @@ const nullValues = [];
         });
     }
 });
-(_b = document.getElementById('neighbours-input')) === null || _b === void 0 ? void 0 : _b.addEventListener('change', function (event) {
+(_b = document.getElementById('neighbors-input')) === null || _b === void 0 ? void 0 : _b.addEventListener('change', function (event) {
     var _a, _b, _c;
     if (event.target instanceof HTMLInputElement) {
         enableBTN[1] = true;
@@ -57,10 +71,10 @@ const nullValues = [];
 (_c = document.getElementById('submit-btn')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', function (event) {
     var _a, _b;
     const file = document.getElementById('file-input');
-    const neighbours = document.getElementById('neighbours-input');
+    const neighbors = document.getElementById('neighbors-input');
     const resultDiv = document.getElementById('solution');
     const response = document.getElementById('response-block');
-    if (!file.files || !neighbours.value) {
+    if (!file.files || !neighbors.value) {
         response.innerHTML = 'Please, fill all the fields';
         response.classList.add('shown');
         return;
@@ -71,7 +85,7 @@ const nullValues = [];
     console.log(algorithm);
     response.innerHTML = '';
     response.classList.remove('error');
-    const solution = solve(matrix, parseInt(neighbours.value), algorithm);
+    const solution = solve(matrix, parseInt(neighbors.value), algorithm);
     const result = solution[0];
     const correlation = solution[1];
     resultDiv.classList.add('shown');
@@ -140,6 +154,10 @@ const nullValues = [];
     document.getElementsByClassName('popup')[0].classList.add('hidden');
 });
 // ----------------------------
+/**
+ * Reads a matrix from a file and returns it
+ * @param file File to read
+ */
 export function readMatrix(input) {
     return new Promise((resolve, reject) => {
         var _a;
@@ -162,6 +180,12 @@ export function readMatrix(input) {
         });
     });
 }
+/**
+ * Translates a string array to a matrix
+ * @param rows Array of strings to translate
+ * @param reject Reject function
+ * @param result Matrix to fill
+ */
 function translateToMatrix(rows, reject, result) {
     const rowSize = rows[0].trim().split(' ').length;
     for (let i = 0; i < rows.length; i++) {

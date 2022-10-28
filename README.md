@@ -1,29 +1,30 @@
+# Recommender system based on collaborative filtering
+
 [![Tests](https://github.com/FNDme/Recommender-System/actions/workflows/test.js.yml/badge.svg?branch=main)](https://github.com/FNDme/Recommender-System/actions/workflows/test.js.yml)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=FNDme_Recommender-System&metric=coverage)](https://sonarcloud.io/summary/new_code?id=FNDme_Recommender-System)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=FNDme_Recommender-System&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=FNDme_Recommender-System)
 
-# Sistema de reomendación basado en filtrado colaborativo
+## Description
 
-## Descripción
-Los sistemas de recomendación son una herramienta muy útil para las organizaciónes a la hora de elegir que contenido mostrar u ofrecer a sus clientes/visitantes. En este caso, se busca desarrollar un sistema que, dado una matriz de valoraciones de usuarios ``j`` a productos ``i``, pueda predecir las valoraciones que un usuario ``j`` distinto daría a un producto ``i`` distinto, que ya ha sido valorado por otros usuarios, basandonos en la correlación entre los usuarios.
+Recommender systems are a very useful tool for organizations when choosing what content to show or offer to their customers/visitors. In this case, we seek to develop a system that, given a matrix of ``j`` user ratings to ``i`` products, can predict the ratings that a different ``j`` user would give to a different ``i`` product, which has already been rated by other users, based on the correlation between users.
 
-<!-- Tabla de ejemplo -->
-|   | Producto 1 | Producto 2 | Producto 3 | Producto 4 | Producto 5 |
+|   | Product 1 | Product 2 | Product 3 | Product 4 | Product 5 |
 |---|------------|------------|------------|------------|------------|
-| Usuario 1 | 5 | 3 | 4 | 4 | ? |
-| Usuario 2 | 3 | 1 | 2 | 3 | 3 |
-| Usuario 3 | 4 | 3 | 4 | 3 | 5 |
-| Usuario 4 | 3 | 3 | 1 | 5 | 4 |
-| Usuario 5 | 1 | 5 | 5 | 2 | 1 |
+| User 1 | 5 | 3 | 4 | 4 | ? |
+| User 2 | 3 | 1 | 2 | 3 | 3 |
+| User 3 | 4 | 3 | 4 | 3 | 5 |
+| User 4 | 3 | 3 | 1 | 5 | 4 |
+| User 5 | 1 | 5 | 5 | 2 | 1 |
 
-Por ejemplo, haciendo uso de la correlación de Pearson, se puede predecir que el usuario 1 valoraría el producto 5 con un 4.85.
+For example, making use of Pearson's correlation, it can be predicted that user 1 would rate product 5 with a 4.85.
 
-Sin embargo, la mayoría de los casos que se encuentran, no tienen un único elemento desconocido dentro de esta matriz, con lo que nuestro sistema ha sido modelado para resolver múltiples elementos desconocidos.
+However, most of the cases encountered do not have a single unknown element within this matrix, so our system has been modeled to resolve multiple unknown elements.
 
-## Formato de entrada
-El sistema de recomendación recibe como entrada un fichero de texto plano con el siguiente formato:
+## Input format
 
-```
+The recommender system receives as input a plain text file with the following format:
+
+```txt
 1 2 3 4 5
 1 5 3 4 4
 2 - 1 2 3
@@ -32,4 +33,4 @@ El sistema de recomendación recibe como entrada un fichero de texto plano con e
 5 1 5 5 2
 ```
 
-En donde cada valor puede ser un número o un `-`. Los números representan la valoración que un usuario ha dado a un producto, mientras que los guiones representan que el usuario no ha valorado el producto. En este caso, el sistema de recomendación debería predecir la valoración que el usuario 3 daría al producto 3.
+Where each value can be a number or a `-`. The numbers represent the rating that a user has given to a product, while the dashes represent that the user has not rated the product. In this case, the recommender system should predict the rating that user 3 would give to product 3.

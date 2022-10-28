@@ -16,6 +16,7 @@
     ],
     "rules": {
         "require-jsdoc": "off",
+        "valid-jsdoc": "off",
         "linebreak-style": "off",
         "object-curly-spacing": "off"
     }

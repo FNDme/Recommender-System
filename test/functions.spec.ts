@@ -108,7 +108,7 @@ describe('solve', () => {
     expect((result[0][4][1] as number).toFixed(2)).to.be.equal('2.94');
   });
 
-  it('should throw an error if neighbours value is greater than rows', () => {
+  it('should throw an error if neighbors value is greater than rows', () => {
     const test = [
       [5, 3, 4, 4, null],
       [3, 1, 2, 3, 3],
@@ -116,10 +116,10 @@ describe('solve', () => {
       [3, 3, 1, 5, 4],
       [1, null, 5, 2, 1]];
     expect(() => solve(test, 6, 'Pearson')).to.
-        throw('Neighbours count is bigger than matrix rows');
+        throw('Neighbors count is bigger than matrix rows');
   });
 
-  it('should throw an error if neighbours value is less than 1', () => {
+  it('should throw an error if neighbors value is less than 1', () => {
     const test = [
       [5, 3, 4, 4, null],
       [3, 1, 2, 3, 3],
@@ -127,7 +127,7 @@ describe('solve', () => {
       [3, 3, 1, 5, 4],
       [1, null, 5, 2, 1]];
     expect(() => solve(test, -1, 'Pearson')).to.
-        throw('Neighbours count is less than 1');
+        throw('Neighbors count is less than 1');
   });
 });
 

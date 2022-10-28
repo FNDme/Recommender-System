@@ -1,26 +1,47 @@
+/**
+ * @title function.ts
+ * @description Functions needed to solve the problem
+ */
+
+/**
+ * @type algorithm Which algorithm is going to be used.
+ */
 export type algorithm = 'Pearson' | 'Cosine' | 'Euclidean';
 
+/**
+ * Return the solved matrix
+ * @param matrix Matrix made of numbers and nulls
+ * @param neighbors Numbers of neighbors to choose
+ * @param algorithm Which algorithm are we going to use
+ */
 export function solve(matrix: Array<Array<number | null>>,
-    neighbours: number, algorithm: algorithm = 'Pearson'):
+    neighbors: number, algorithm: algorithm = 'Pearson'):
     [Array<Array<number | null>>, Array<Array<number | null>>] {
   const result = structuredClone(matrix);
-  if (neighbours > matrix.length) {
-    throw new Error('Neighbours count is bigger than matrix rows');
+  if (neighbors > matrix.length) {
+    throw new Error('Neighbors count is bigger than matrix rows');
   }
-  if (neighbours < 1) {
-    throw new Error('Neighbours count is less than 1');
+  if (neighbors < 1) {
+    throw new Error('Neighbors count is less than 1');
   }
   for (let i = 0; i < matrix.length; i++) {
     for (let j = 0; j < matrix[i].length; j++) {
       if (matrix[i][j] === null) {
         result[i][j] =
-          solveAlgorithm(matrix, i, j, algorithm, neighbours);
+          solveAlgorithm(matrix, i, j, algorithm, neighbors);
       }
     }
   }
   return [result, calculateCorrelations(matrix, algorithm)];
 }
 
+/**
+ * @description It calculates the correlation for an item of the matrix
+ * @type {Array} Matrix made of numbers and nulls
+ * @param matrix Matrix where we are going to calculate the correlation
+ * @param algorithm Which algorithm are we going to use
+ * @returns Array of correlations
+ */
 export function calculateCorrelations(matrix: Array<Array<number | null>>,
     algorithm: algorithm): Array<Array<number | null>> {
   const correlationMatrix: Array<Array<number | null>> = [];
@@ -50,8 +71,16 @@ export function calculateCorrelations(matrix: Array<Array<number | null>>,
   return correlationMatrix;
 }
 
+/**
+ * This function calculates the final number in the matrix
+ * @param matrix Matrix to solve
+ * @param i Row
+ * @param j Col
+ * @param algorithm Which algorithm are we going to use
+ * @param numberOfNeighbors numbers of neighbors to calculate the number
+ */
 export function solveAlgorithm(matrix: Array<Array<number | null>>,
-    i: number, j: number, algorithm: algorithm, numberOfNeighbours: number):
+    i: number, j: number, algorithm: algorithm, numberOfNeighbors: number):
     number {
   let correlationArray: Array<number | null>;
   switch (algorithm) {
@@ -65,20 +94,25 @@ export function solveAlgorithm(matrix: Array<Array<number | null>>,
       correlationArray = calculateEuclidean(matrix, i);
       break;
   }
-  const neighbours: [number, number][] =
-    neighValue(correlationArray, numberOfNeighbours);
+  const neighbors: [number, number][] =
+    neighValue(correlationArray, numberOfNeighbors);
   const avgI: number = avgRow(matrix[i]);
   let numerator: number = 0;
   let denominator: number = 0;
-  for (const neighbour of neighbours) {
-    const avgJ: number = avgRow(matrix[neighbour[1]]);
+  for (const neighbor of neighbors) {
+    const avgJ: number = avgRow(matrix[neighbor[1]]);
     numerator +=
-      (matrix[neighbour[1]][j] as number - avgJ) * neighbour[0];
-    denominator += Math.abs(neighbour[0]);
+      (matrix[neighbor[1]][j] as number - avgJ) * neighbor[0];
+    denominator += Math.abs(neighbor[0]);
   }
   return avgI + (numerator / denominator);
 }
 
+/**
+ * Function to calculate the correlation by Pearson
+ * @param matrix Matrix
+ * @param i Row
+ */
 export function calculatePearson(matrix: Array<Array<number | null>>,
     i: number): Array<number | null> {
   const correlationArray: Array<number | null> = [];
@@ -107,6 +141,11 @@ export function calculatePearson(matrix: Array<Array<number | null>>,
   return correlationArray;
 }
 
+/**
+ * Function to calculate the correlation by Cosine Distance
+ * @param matrix Matrix
+ * @param i Row
+ */
 export function calculateCosine(matrix: Array<Array<number | null>>,
     i: number): Array<number | null> {
   const correlationArray: Array<number | null> = [];
@@ -132,6 +171,11 @@ export function calculateCosine(matrix: Array<Array<number | null>>,
   return correlationArray;
 }
 
+/**
+ * Function to calculate the correlation by Euclidean Distance
+ * @param matrix Matrix
+ * @param i Row
+ */
 export function calculateEuclidean(matrix: Array<Array<number | null>>,
     i: number): Array<number | null> {
   const correlationArray: Array<number | null> = [];
@@ -153,6 +197,11 @@ export function calculateEuclidean(matrix: Array<Array<number | null>>,
   return correlationArray;
 }
 
+/**
+ * Function to calculate the average of a row
+ * @param row
+ * @param baseRow row to compare
+ */
 export function avgRow(row: Array<number | null>,
     baseRow: Array<number | null> = row): number {
   let sum: number = 0;
@@ -168,6 +217,11 @@ export function avgRow(row: Array<number | null>,
   return sum / (row.length - nullCount);
 }
 
+/**
+ * Function to return the N higher neighbors
+ * @param values Array of neighbors
+ * @param neigh Number of neighbors
+ */
 export function neighValue(values: Array<number | null>,
     neigh: number): [number, number][] {
   const result: [number, number][] = [];
@@ -180,6 +234,10 @@ export function neighValue(values: Array<number | null>,
   return result.slice(0, neigh);
 }
 
+/**
+ * Function to transform a matrix into a string
+ * @param matrix Matrix
+ */
 export function matrixToString(matrix: Array<Array<number | null>>): string {
   let result = '';
   for (let i = 0; i < matrix.length; i++) {
