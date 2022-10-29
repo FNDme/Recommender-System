@@ -4,7 +4,7 @@
  * @content It reads the file and translates it into a matrix.
  */
 
-import { solve, matrixToString, algorithm } from './functions.js';
+import { solve, matrixToString, algorithm, neighValue } from './functions.js';
 
 /**
  * @variable enableBTN Button to enable
@@ -92,7 +92,6 @@ document.getElementById('submit-btn')?.addEventListener('click',
       const form = document.forms.namedItem('form') as HTMLFormElement;
       const radios = form.elements.namedItem('algorithm') as RadioNodeList;
       const algorithm = radios.value as algorithm;
-      console.log(algorithm);
       response.innerHTML = '';
       response.classList.remove('error');
       const solution = solve(matrix,
@@ -108,13 +107,31 @@ document.getElementById('submit-btn')?.addEventListener('click',
               createElement('div'));
           resultTable.classList.add('result-table');
           const corr = document.createElement('div');
-          for (const line of correlation) {
+          for (let i = 0; i < correlation.length; i++) {
             const row = document.createElement('div');
+            let highlightedNeighbors: [number | null, number][] = [];
+            for (const solRow of nullValues) {
+              if (solRow[0] === i) {
+                highlightedNeighbors = neighValue(correlation[i],
+                    Number(neighbors.value));
+              }
+            }
+            const neighborsRows: number[] = [];
+            for (const neigh of highlightedNeighbors) {
+              neighborsRows.push(neigh[1]);
+            }
             if (row instanceof HTMLDivElement) {
               row.classList.add('row');
-              for (const item of line) {
-                row.innerHTML += `<div class="cell">${item === null ?
-                  '\\' : item?.toFixed(2)}</div>`;
+              for (let j = 0; j < correlation[i].length; j++) {
+                if (neighborsRows.includes(j)) {
+                  row.innerHTML +=
+                    `<div class="cell objective">${correlation[i][j] ===
+                      null ? '\\' : correlation[i][j]?.toFixed(2)}</div>`;
+                  continue;
+                }
+                row.innerHTML +=
+                `<div class="cell">${correlation[i][j] === null ?
+                  '\\' : correlation[i][j]?.toFixed(2)}</div>`;
               }
               corr.appendChild(row);
             }

@@ -4,7 +4,7 @@
  * @content It reads the file and translates it into a matrix.
  */
 var _a, _b, _c, _d, _e;
-import { solve, matrixToString } from './functions.js';
+import { solve, matrixToString, neighValue } from './functions.js';
 /**
  * @variable enableBTN Button to enable
  */
@@ -69,7 +69,7 @@ const nullValues = [];
     }
 });
 (_c = document.getElementById('submit-btn')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', function (event) {
-    var _a, _b;
+    var _a, _b, _c, _d;
     const file = document.getElementById('file-input');
     const neighbors = document.getElementById('neighbors-input');
     const resultDiv = document.getElementById('solution');
@@ -82,7 +82,6 @@ const nullValues = [];
     const form = document.forms.namedItem('form');
     const radios = form.elements.namedItem('algorithm');
     const algorithm = radios.value;
-    console.log(algorithm);
     response.innerHTML = '';
     response.classList.remove('error');
     const solution = solve(matrix, parseInt(neighbors.value), algorithm);
@@ -97,13 +96,30 @@ const nullValues = [];
                 createElement('div'));
             resultTable.classList.add('result-table');
             const corr = document.createElement('div');
-            for (const line of correlation) {
+            for (let i = 0; i < correlation.length; i++) {
                 const row = document.createElement('div');
+                let highlightedNeighbors = [];
+                for (const solRow of nullValues) {
+                    if (solRow[0] === i) {
+                        highlightedNeighbors = neighValue(correlation[i], Number(neighbors.value));
+                    }
+                }
+                const neighborsRows = [];
+                for (const neigh of highlightedNeighbors) {
+                    neighborsRows.push(neigh[1]);
+                }
                 if (row instanceof HTMLDivElement) {
                     row.classList.add('row');
-                    for (const item of line) {
-                        row.innerHTML += `<div class="cell">${item === null ?
-                            '\\' : item === null || item === void 0 ? void 0 : item.toFixed(2)}</div>`;
+                    for (let j = 0; j < correlation[i].length; j++) {
+                        if (neighborsRows.includes(j)) {
+                            row.innerHTML +=
+                                `<div class="cell objective">${correlation[i][j] ===
+                                    null ? '\\' : (_a = correlation[i][j]) === null || _a === void 0 ? void 0 : _a.toFixed(2)}</div>`;
+                            continue;
+                        }
+                        row.innerHTML +=
+                            `<div class="cell">${correlation[i][j] === null ?
+                                '\\' : (_b = correlation[i][j]) === null || _b === void 0 ? void 0 : _b.toFixed(2)}</div>`;
                     }
                     corr.appendChild(row);
                 }
@@ -119,11 +135,11 @@ const nullValues = [];
                             value[1] === j)) {
                             row.innerHTML +=
                                 `<div class="cell objective">${result[i][j] === null ?
-                                    '-.--' : (_a = result[i][j]) === null || _a === void 0 ? void 0 : _a.toFixed(2)}</div>`;
+                                    '-.--' : (_c = result[i][j]) === null || _c === void 0 ? void 0 : _c.toFixed(2)}</div>`;
                         }
                         else {
                             row.innerHTML += `<div class="cell">${result[i][j] === null ?
-                                '-.--' : (_b = result[i][j]) === null || _b === void 0 ? void 0 : _b.toFixed(2)}</div>`;
+                                '-.--' : (_d = result[i][j]) === null || _d === void 0 ? void 0 : _d.toFixed(2)}</div>`;
                         }
                     }
                     sol.appendChild(row);
